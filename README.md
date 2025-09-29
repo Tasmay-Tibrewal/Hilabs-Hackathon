@@ -1,6 +1,6 @@
 # Clinical Concept Harmonizer (Semantic + Fuzzy + LLM-Assist)
 
-> HiLabs Hackathon 2025 — end-to-end engine to normalize messy clinical inputs into **RxNorm** (medications) and **SNOMED CT** (diagnoses/procedures/labs) with a hybrid of embedding search, fast fuzzy matching, and optional LLM assist.
+> HiLabs Hackathon 2025 — end-to-end engine to normalize messy clinical inputs into **RxNorm** (medications) and **SNOMED CT** (diagnoses/procedures/labs) with a hybrid of embedding search, fast fuzzy matching, and optional LLM assist. 
 
 ---
 
