@@ -100,6 +100,7 @@ Raw input row ─► [Optional LLM: query expansion]
 ├─ Test.xlsx                    # input sheet (sample cases)
 ├─ Test_with_predictions.xlsx   # (output file)
 ├─ Column Reference Guide.md    # column dictionary for the parquet files
+├─ Arch.md                      # contains extremely detailed description about the architecture of our solution
 └─ README.md                    # this file
 ```
 
