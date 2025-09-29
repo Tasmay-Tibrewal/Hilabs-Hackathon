@@ -51,6 +51,8 @@ try:
 except Exception:
     threadpool_limits = None
 
+from contextlib import nullcontext
+
 DATE_FORMAT_STR = "%Y-%m-%d %H:%M:%S"
 
 def gpu_summary():
