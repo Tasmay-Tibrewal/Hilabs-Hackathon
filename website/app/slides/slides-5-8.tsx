@@ -41,15 +41,7 @@ export function Slide5({ onDetail }: { onDetail: (id: string) => void }) {
         </div>
       </div>
 
-      <div className="mt-8 bg-white p-6 rounded-xl border-2 border-gray-200">
-        <h3 className="text-2xl font-bold mb-4">Fuzzy Matching</h3>
-        <ul className="text-lg text-gray-700 space-y-2">
-          <li>• Two-stage RapidFuzz: ratio prefilter then token_set_ratio on reduced candidates.</li>
-          <li>• Anchors = {`{query} ∪ keywords`} with MAX across anchors to capture brands/abbreviations.</li>
-          <li>• Highly parallel via workers with vectorized scoring on reduced pool.</li>
-        </ul>
-        <button onClick={() => onDetail('fuzzy-deep')} className="mt-4 w-full py-3 bg-yellow-600 text-white rounded-lg font-bold hover:bg-yellow-700">Fuzzy Matching Deep Dive →</button>
-      </div>
+      {/* Fuzzy matching deep dive moved to the 4-Method Hybrid slide; section intentionally omitted here. */}
     </div>
   )
 }

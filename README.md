@@ -448,3 +448,30 @@ python clean.py query \
 * SNOMED CT and RxNorm teams for the vocabularies used in this challenge.
 
 ---
+## Presentation website (website/)
+
+The repository includes a static presentation website that walks through the solution in 20 slides with interactive deep‑dive popups.
+
+- Tech stack: Next.js 14, TypeScript, Tailwind, Mermaid (CDN), static export
+- Keyboard: ←/→, Space to advance, Esc to close deep dives
+- Slides: Build phase, Semantic Search, Multi‑Signal Scoring, STY, Two‑Stage Fuzzy, Per‑Code Aggregation, Architecture, Concurrency, Memory/Robustness, Deterministic (No LLM) Mode, Future Work, Summary
+- Deep dives: Dense retrieval (FAISS/HNSW + IVFPQ/Flat), Fuzzy (two‑stage + anchors), LLM expansion XML + prompts, scoring math, STY computation, aggregation formula, concurrency semaphores, OOM/BLAS/FAISS threads, deterministic mode, backends & quantization, extra architecture diagrams
+
+Run locally
+```
+cd website
+npm install
+npm run dev   # http://localhost:3000
+```
+
+Build static site
+```
+cd website
+npm run build   # output in ./out
+```
+
+Deploy
+- GitHub Pages via website/.github/workflows/deploy.yml (or serve ./out on any static host).
+
+Editing guide
+- See website/WEBSITE_STRUCTURE.md for slide mapping, deep‑dive IDs, Mermaid tips, and contribution guide.

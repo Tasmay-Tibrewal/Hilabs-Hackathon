@@ -211,8 +211,15 @@ export function Slide4({ onDetail }: { onDetail: (id: string) => void }) {
                   </p>
                 </div>
               </div>
-              <button onClick={() => onDetail(m.id === 'method-fuzzy' ? 'fuzzy-deep' : m.id)} className={`px-6 py-3 bg-${m.color}-600 text-white rounded-lg hover:bg-${m.color}-700 font-bold ml-4`}>
-                {m.id === 'method-fuzzy' ? 'Fuzzy Matching Deep Dive →' : 'Deep Dive →'}
+              <button
+                onClick={() => onDetail(m.id === 'method-fuzzy' ? 'fuzzy-deep' : m.id)}
+                className={`px-6 py-3 rounded-lg font-bold ml-4 ${
+                  m.id === 'method-fuzzy'
+                    ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                    : `bg-${m.color}-600 text-white hover:bg-${m.color}-700`
+                }`}
+              >
+                {m.id === 'method-fuzzy' ? 'Deep Dive →' : 'Deep Dive →'}
               </button>
             </div>
           </div>
