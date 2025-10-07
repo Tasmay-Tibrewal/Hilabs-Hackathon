@@ -1,0 +1,52 @@
+%% 1) High-level system overview
+flowchart TB
+  %% Entrypoint
+  A["argparse CLI (main -> subparsers)"] -->|build| B(Build Indices)
+  A -->|query| C(Query Single)
+  A -->|batch| D(Batch Process)
+
+  %% Storage
+  subgraph S["On-disk Artifacts"]
+    S1[snomed_catalog.parquet]
+    S2[rxnorm_catalog.parquet]
+    S3[snomed.index.faiss]
+    S4[rxnorm.index.faiss]
+    S5[snomed_vectors_f32_rx_memmap]
+    S6[rxnorm_vectors_f32_rx_memmap]
+    S7[sty_vocab.json]
+    S8[sty_embeddings.npy]
+    S9[meta.json]
+  end
+
+  B -- write --> S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9
+
+  %% Runtime bundle
+  subgraph L["Runtime Bundle (load_bundle)"]
+    L1[SentenceTransformer model]
+    L2[FAISS snomed index]
+    L3[FAISS rxnorm index]
+    L4[snomed catalog DF]
+    L5[rxnorm catalog DF]
+    L6[STY vocab + embeddings]
+    L7[memmap views of vectors]
+  end
+
+  C -- load --> L
+  D -- load --> L
+
+  %% LLM control plane
+  subgraph X["LLM Control Plane"]
+    X1[pick_llm_backend_and_model]
+    X2{Backend?}
+    X3[vLLM engine: quant, TP, concurrency]
+    X4[llama.cpp engine: n_threads, n_ctx]
+  end
+
+  C -- if use_llm_* --> X1 --> X2
+  D -- if use_llm_* --> X1
+  X2 -->|vllm| X3
+  X2 -->|llama-cpp| X4
+
+  %% Outputs
+  C --> O1[stdout: Top-k codes]
+  D --> O2[out_file: csv/xlsx with columns]

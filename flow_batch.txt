@@ -1,0 +1,33 @@
+%% 4) Batch flow (batch command) – Async rows + shared LLM/ANN
+flowchart TD
+  A[run_batch] --> B[load_bundle + set hnsw efSearch]
+  A --> C[configure_cpu_threading + threadpool_limits]
+  A --> D[read_input_table - in_file]
+  A --> E{use_llm_*?}
+
+  E -- yes --> F[Init AsyncLLMClient - concurrency, TP, quant]
+  E -- no --> F0[No LLM path]
+
+  %% Orchestration
+  subgraph ORCH[Async Orchestrator]
+    direction TB
+    G[ThreadPoolExecutor size = cpu_pool] --> H[asyncio Queue of row indices]
+    H --> I[rows_concurrency workers]
+  end
+
+  F --> ORCH
+  F0 --> ORCH
+
+  %% Worker
+  subgraph W[process_row - i]
+    direction TB
+    W1[Read: Input Entity Description, Entity Type]
+    W2{use_llm_*?}
+    W2 -- yes --> W3[advanced_match_one_async - LLM expand → ANN → fuzzy → per-code → optional LLM rerank]
+    W2 -- no --> W4[Legacy ANN → choose_system_hits]
+    W3 --> W5[Write top1 + optional topk cols into DF]
+    W4 --> W5
+  end
+
+  I --> W1
+  W5 --> J[write_output_table - out_file]

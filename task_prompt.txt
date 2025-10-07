@@ -1,3 +1,266 @@
+i am attaching the whole info and task description, we need to present our solution for the hackathon tommorrow, can you create a very good looking website which we can deploy, with all the details and explanation, with diagrams and tables, etc. note: maintain conciseness of flow and things like going to next topic directly, but also keep an option to view in more detailed, say keep a question mark (?) which when hovered over opens a window with more specific info, or some button which opens a new section/pop-up with something more, or say a short code snippet. so keep the website both small, easy to navigate, detailed enough in first look and highly expandable for going in depth.
+add things like future works and all as well. and keep the webpage design professional and good, keep color pallete simple black and white, like openai/uber. but use nice design and fun elements.
+i am attaching all information here ask me any question if needed.
+
+problem statement:
+HiLabs Hackathon 2025: Harmonizing Clinical Concepts
+Introduction
+HiLabs invites IIT Kharagpur students to participate in an exciting hackathon cantered on
+solving one of the biggest challenges in healthcare data science: clinical data harmonization.
+Every day, hospitals, labs, and pharmacies generate millions of clinical records. These
+records often come coded in different systems, with inconsistent descriptions, or even with
+errors. For example:
+• A blood test for Haemoglobin might be sent as “Hb” by one lab and “HGB” by another.
+• A medication like Paracetamol might be recorded as “Acetaminophen” or with a local
+drug code.
+• A clinical condition such as Asthma could be described in multiple inconsistent forms
+across systems.
+This variation makes it difficult to standardize healthcare data and use it for analytics,
+decision-making, and regulatory reporting. The solution is to map all such inputs to standard
+clinical terminologies — RxNorm (for medications), and SNOMED CT (for diagnoses,
+procedures and labs).
+The Challenge
+Your task is to build an intelligent clinical data harmonization engine that:
+1. Takes raw clinical inputs (clinical entities).
+2. Maps them to standardized codes in RxNorm, or SNOMED CT, based on the entity
+types.
+3. Outputs clean, harmonized results that can be consumed downstream.
+The inputs you receive may not always be clean: some descriptions may be incomplete, and
+some records may only have partial information. Your solution must be able to handle these
+variations and still map the inputs to the correct standardized concept wherever possible.
+What We Provide
+• Sample clinical dataset with descriptions from labs, medications, diagnoses &
+procedures in mixed/unclean formats.
+• Target code and description mappings of RxNorm, and SNOMED CT.
+• Test cases with a list of raw clinical inputs (with their entities)
+Rules
+• Only open-source libraries and frameworks are allowed.
+• No external APIs or proprietary datasets can be used.
+• Submissions must include:
+o Output codes, descriptions, coding system name
+o A code repository (public).
+o A run script and README with instructions.
+o A short demo or notebook walkthrough of your solution.
+Evaluation Criteria
+• Accuracy of Mappings (50%): Correctness in mapping input descriptions to correct
+codes and descriptions in RxNorm or SNOMED.
+• Technical Approach (25%): Quality of algorithms, efficiency of handling variations, and
+robustness.
+• Innovation & Creativity (15%): Novel ideas for handling ambiguity or messy inputs.
+• Completeness & Documentation (10%): Clear setup, runnable code, and end-to-end
+solution.
+Sample Input-Output Mapping
+Input Output Remarks
+Input
+Description
+Entity
+Type
+Standard
+Code
+Standard
+System
+Standard
+Description
+Paracetamol
+500 mg
+Medication 198440 RXNORM Acetaminophen
+500 MG Oral
+Tablet
+Paracetamol is
+general name of
+Acetaminophen
+Aspirin 10
+mg
+Medication 1191 RXNORM Aspirin Aspirin 10 mg does
+not exist as a
+standard form; falls
+back on base
+medication aspirin
+Asthma Diagnosis 195967001 SNOMED
+CT
+Asthma Direct match
+persistent
+pain on the
+upper right
+portion of
+your
+abdomen
+Diagnosis 285388000 SNOMED
+CT
+Right sided
+abdominal pain
+natural language
+input correctly
+parsed to identify
+the correct location
+of pain
+Chest xr Procedure 399208008 SNOMED
+CT
+Plain X-ray of
+chest
+Abbreviation "xr"
+expanded to "X-ray"
+for proper matching
+Appendix
+removal
+surgery
+Procedure 80146002 SNOMED
+CT
+Appendectomy Common layman
+term mapped to its
+standard medical
+procedure name.
+Bilirubin Lab 359986008 SNOMED
+CT
+Bilirubin, total
+measurement
+Lab test name
+normalized to its
+standard
+measurement
+terminology,
+instead of being
+mapped to
+substance
+Bilirubin with
+SNOMED code of
+79706000.
+fasting
+sugar test
+Lab 52302001 SNOMED
+CT
+Glucose
+measurement,
+fasting
+Common term
+mapped to clinical
+terminology
+
+original ps's md:
+# Harmonizing Clinical Concepts
+
+## Repository Overview
+This repository contains all the necessary files and instructions required for this problem statement on harmonizing clinical concepts.
+
+## Contents of the Zip Folder
+- **`Test.xlsx`**  
+  Excel file containing input data. Your predictions will be appended to this file.
+
+- **`snomed_all_data.parquet`**  
+  Parquet file containing all target codes and descriptions for the SNOMED CT coding system.
+
+- **`rxnorm_all_data.parquet`**  
+  Parquet file containing all target codes and descriptions for the RxNorm coding system.
+
+- **`Column Reference Guide.md`**  
+  Markdown file explaining the columns present in the SNOMED CT and RxNorm parquet files.
+
+## Submission Guidelines
+To complete your submission:
+
+1. **Modify the `Test.xlsx` file** by appending the following three columns:
+   - `Output Coding System`: Either `SNOMEDCT_US` or `RXNORM`
+   - `Output Target Code`: Predicted code in **string** format
+   - `Output Target Description`: Human-readable description of the predicted code
+
+2. **Your solution in a public code repository.**
+
+3. **Ensure your repository includes:**
+   - A clear, concise `README.md` explaining:
+     - Your technical solution
+     - A short walkthrough of the repository
+   - Code that can be easily tested with additional input files
+
+and
+
+# Columns Reference Guide
+
+---
+
+## 1. `CUI` — Concept Unique Identifier
+- **Definition**: A unique identifier assigned to a concept.  
+- **Purpose**: Groups together all terms from different vocabularies (SNOMED CT, RxNorm, ICD, etc.) that mean the same thing (are synonymous).  
+- **Format**: Always starts with a `"C"` followed by 7 digits (e.g., `C0011849`).  
+- **Example**:
+  - `C0011849` → *Diabetes Mellitus*  
+    - In RxNorm: `Diabetes Mellitus`  
+    - In SNOMED CT: `44054006 | Diabetes mellitus (disorder) |`
+
+---
+
+## 2. `System` — Source Vocabulary (SAB)
+- **Definition**: Abbreviation for the source vocabulary or terminology that contributed the concept.  
+- **Purpose**: Identifies where the term came from (RxNorm, SNOMED CT, MeSH, ICD-10, etc.).  
+- **Example**:
+  - `RXNORM` → concepts from the RxNorm vocabulary.  
+  - `SNOMEDCT_US` → concepts from the U.S. edition of SNOMED CT.  
+
+---
+
+## 3. `TTY` — Term Type
+- **Definition**: Describes the role of the term within the source vocabulary.  
+- **Purpose**: Differentiates between preferred names, synonyms, codes, ingredients, brand names, etc.  
+- **Common Values**:
+  - `PT` (SNOMED CT) → Preferred Term.  
+  - `SY` (RxNorm, SNOMED CT) → Synonym.  
+  - `SCD` (RxNorm) → Semantic Clinical Drug (normalized clinical drug concept).  
+  - `BN` (RxNorm) → Brand Name.  
+- **Example**:
+  - RxNorm:  
+    - `SCD` → *Metformin 500 MG Oral Tablet*  
+    - `BN` → *Glucophage*  
+  - SNOMED CT:  
+    - `PT` → *Diabetes mellitus (disorder)*  
+    - `SY` → *Sugar diabetes*  
+
+---
+
+## 4. `CODE` — Source Code
+- **Definition**: The identifier used **within the source vocabulary** for the concept.  
+- **Purpose**: Provides the original vocabulary-specific code.  
+- **Format**: Varies by vocabulary.  
+- **Example**:
+  - RxNorm: `860975` → *Metformin 500 MG Oral Tablet*  
+  - SNOMED CT: `44054006` → *Diabetes mellitus (disorder)*  
+
+---
+
+## 5. `STR` — String (Term Name)
+- **Definition**: The actual human-readable name of the concept as it appears in the source vocabulary.  
+- **Purpose**: Stores the textual representation of the concept.  
+- **Example**:
+  - RxNorm: `Metformin 500 MG Oral Tablet`  
+  - SNOMED CT: `Diabetes mellitus (disorder)`  
+
+---
+
+## 6. `STY` — Semantic Type
+- **Definition**: The broad category or semantic group.  
+- **Purpose**: Provides higher-level grouping of concepts beyond source vocabularies.  
+- **Examples**:
+  - `T047` → *Disease or Syndrome*  
+  - `T121` → *Pharmacologic Substance*  
+- **Example**:
+  - `C0011849` (*Diabetes Mellitus*) → `Disease or Syndrome`  
+  - `C0025598` (*Metformin*) → `Pharmacologic Substance`  
+
+---
+
+# Summary Table
+
+| Column  | Meaning                                | Example (RxNorm)                   | Example (SNOMED CT)                    |
+|---------|----------------------------------------|------------------------------------|----------------------------------------|
+| `CUI`   | Concept Unique Identifier              | `C0025598` (*Metformin*)           | `C0011849` (*Diabetes Mellitus*)       |
+| `System`| Source vocabulary abbreviation (SAB)   | `RXNORM`                           | `SNOMEDCT_US`                          |
+| `TTY`   | Term type in source vocabulary         | `SCD` (Semantic Clinical Drug)     | `PT` (Preferred Term)                  |
+| `CODE`  | Code in source vocabulary              | `860975`                           | `44054006`                             |
+| `STR`   | Human-readable string/term             | *Metformin 500 MG Oral Tablet*     | *Diabetes mellitus (disorder)*         |
+| `STY`   | Semantic type                          | *Pharmacologic Substance*          | *Disease or Syndrome*                  |
+
+---
+
+
+code:
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -2108,3 +2371,1725 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+readme.md:
+# Clinical Concept Harmonizer (Semantic + Fuzzy + LLM-Assist)
+
+> HiLabs Hackathon 2025 — end-to-end engine to normalize messy clinical inputs into **RxNorm** (medications) and **SNOMED CT** (diagnoses/procedures/labs) with a hybrid of embedding search, fast fuzzy matching, and optional LLM assist. 
+
+---
+
+## Table of contents
+
+* [What this does](#what-this-does)
+* [How it works (architecture)](#how-it-works-architecture)
+* [Why it’s novel](#why-its-novel)
+* [Repo layout](#repo-layout)
+* [Quickstart](#quickstart)
+* [Build the indices](#build-the-indices)
+* [Run: batch or single query](#run-batch-or-single-query)
+* [Output format](#output-format)
+* [Tuning & performance knobs](#tuning--performance-knobs)
+* [Methodology details](#methodology-details)
+* [Rules compliance](#rules-compliance)
+* [Deliverables checklist (for evaluators)](#deliverables-checklist-for-evaluators)
+* [Troubleshooting](#troubleshooting)
+* [Notes on data & licensing](#notes-on-data--licensing)
+
+---
+
+## What this does
+
+Given raw, messy clinical inputs (e.g., “paracetamol 500”, “chest xr”, “hcv rna”), the system:
+
+1. Chooses the appropriate target coding system: **RxNorm** for medications; **SNOMED CT** elsewhere.
+2. Uses **semantic search** (SentenceTransformers + FAISS) over pre-built indices.
+3. Adds **fuzzy matching** (RapidFuzz) for robustness to spelling/abbreviation noise.
+4. Optionally uses an **LLM in two places**:
+
+   * **Query expansion**: propose alternate keywords, short description and likely semantic types (STYs).
+   * **Final re-ranking**: reorder top candidates with a short justification.
+5. Returns **top-k** normalized codes with system, code, description, STY, and TTY — written back to Excel/CSV.
+
+You can run **LLM-off** (fast, fully open-source) or **LLM-on** (more recall on ambiguous inputs). Works on **CPU** via `llama-cpp-python` and **GPU** via `vLLM` (Qwen3-4B by default; auto-selects based on VRAM).
+
+---
+
+## How it works (architecture)
+
+```
+Raw input row ─► [Optional LLM: query expansion]
+                    • alternate keywords
+                    • short description
+                    • candidate STYs (from known STY inventory)
+                 ┌──────────────────────────────────────────────────────────┐
+                 │ Semantic search (FAISS)                                  │
+                 │  • direct query vec                                      │
+                 │  • description vec                                       │
+                 │  • each alternate keyword vec                            │
+                 │  • compute STY match via pre-embedded STY vocabulary     │
+                 └──────────────────────────────────────────────────────────┘
+                                   │
+                     Weighted multi-signal score per row
+                     (desc/keywords/direct/STY)  →  pool top N rows
+                                   │
+                 Fast fuzzy re-rank (RapidFuzz, batched two-stage)
+                                   │
+                       Aggregate to per-code scores
+             avg(all rows) × avg(top rows) × √log10(%rows in top pool)
+                                   │
+          [Optional LLM: final XML re-rank of top codes with reasons]
+                                   │
+                          Top-k codes to spreadsheet
+```
+
+**Key artifacts built once**
+
+* SentenceTransformer embeddings for all SNOMED/RxNorm terms.
+* FAISS indices (`HNSW` by default; `IVFPQ` and `Flat` also supported).
+* A compact **STY vocabulary** and its embedding matrix for fast STY similarity.
+
+---
+
+## Why it’s novel
+
+* **Multi-signal scoring**: combines four orthogonal signals
+
+  * `direct` (input ↔ code term), `desc` (LLM description ↔ term),
+  * `kw` (LLM keywords ↔ term), `sty` (predicted STY ↔ code STY).
+* **Large-K pipeline**: searches large candidate pools efficiently, then **fuzzy re-ranks** with a **two-stage batched** RapidFuzz (`ratio` prefilter → `token_set_ratio` refine).
+* **Per-code aggregation**: scores *families* of rows (same code, different TTY/strings) with a stability boost based on how many instances survive into the top pool.
+* **LLM exchange format is strict XML** for deterministic parsing; LLM is *optional* and fully replaceable with the legacy pipeline.
+* **Scalable & resource-aware**: caps FAISS/BLAS threads, sizes the asyncio CPU pool, and bounds concurrent GPU/CPU work with semaphores to avoid oversubscription.
+
+---
+
+## Repo layout
+
+```
+.
+├─ clean.py                     # main pipeline (build/query/batch + LLM/FAISS/fuzzy)
+├─ solution-notebook-demo.ipynb # notebook walkthrough of the solution, simple demo
+├─ snomed_all_data.parquet      # SNOMED CT data (provided)
+├─ rxnorm_all_data.parquet      # RxNorm data (provided)
+├─ Test.xlsx                    # input sheet (sample cases)
+├─ Test_with_predictions.xlsx   # (output file)
+├─ Column Reference Guide.md    # column dictionary for the parquet files
+├─ Arch.md                      # contains extremely detailed description about the architecture of our solution
+└─ README.md                    # this file
+```
+
+> The screenshot near the top shows an example directory view.
+
+---
+
+## Quickstart
+
+> **Python 3.10+** recommended.
+
+### 1) Install dependencies
+
+**CPU-only (simplest)**
+
+```bash
+pip install -U pandas pyarrow openpyxl numpy tqdm \
+  sentence-transformers faiss-cpu rapidfuzz llama-cpp-python
+```
+
+**GPU (optional, for faster LLM / embeddings)**
+
+```bash
+pip install -U vllm bitsandbytes "vllm[flashinfer]" torch --index-url https://download.pytorch.org/whl/cu121
+# Ensure a matching CUDA toolkit/driver is present on your machine.
+```
+
+> If you’re on a Debian/Ubuntu runtime that needs CUDA libs, see the commands in the next section. For local machines with proper GPU drivers, you usually **don’t** need `apt` steps.
+
+---
+
+## Build the indices
+
+This step embeds all SNOMED/RxNorm strings and creates FAISS indices + STY embeddings.
+
+```bash
+python clean.py build \
+  --snomed_parquet snomed_all_data.parquet \
+  --rxnorm_parquet rxnorm_all_data.parquet \
+  --out_dir indices
+```
+
+**Optional Hugging Face login** (if a model requires it):
+
+```bash
+python clean.py build ... --hf_token YOUR_HF_TOKEN
+```
+
+**Expected artifacts in `indices/`**
+
+* `snomed.index.faiss`, `rxnorm.index.faiss`
+* `snomed_catalog.parquet`, `rxnorm_catalog.parquet`
+* `snomed_vectors.f32`, `rxnorm_vectors.f32` (memmaps)
+* `sty_vocab.json`, `sty_embeddings.npy`
+* `meta.json` (all settings captured)
+
+**Build time (rough order of magnitude)**
+
+* ~10–60 minutes depending on hardware and index type/size. HNSW is the default and works well.
+
+---
+
+## Run: batch or single query
+
+### A) **Batch** (recommended)
+
+**LLM OFF (pure semantic + fuzzy)** — fastest
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx \
+  --out_file out.xlsx \
+  --use_llm_clean false --use_llm_rerank false \
+  --llm_backend auto \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+**LLM ON (query expansion + final re-rank)** — best for ambiguity
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx \
+  --out_file out.xlsx \
+  --use_llm_clean true --use_llm_rerank true \
+  --llm_backend auto \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+Want the full top-k in your spreadsheet?
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx --out_file out.xlsx \
+  --use_llm_clean false --use_llm_rerank false \
+  --include_topk true \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+### B) **Single query** (stdout)
+
+```bash
+python clean.py query \
+  --text "hcv rna" \
+  --entity_type "Procedure" \
+  --index_dir indices \
+  --use_llm_clean false --use_llm_rerank false \
+  --llm_backend auto
+```
+
+---
+
+## Output format
+
+For each input row (`Input Entity Description`, `Entity Type`) you get:
+
+* **Output Coding System** → `SNOMEDCT_US` or `RXNORM`
+* **Output Target Code** → code as **string**
+* **Output Target Description** → human-readable label
+* **Output Semantic Type (STY)** → e.g., *Disease or Syndrome*, *Pharmacologic Substance*
+* **Output Term Type (TTY)** → e.g., `PT`, `SCD`, `BN`, …
+
+With `--include_topk`, additional columns are appended for each rank `k`:
+`Output Coding System k`, `Output Target Code k`, `Output Target Description k`, `Output Semantic Type k`, `Output Term Type k`.
+
+See **Column Reference Guide.md** for vocabulary column definitions used inside the engine.
+
+---
+
+## Tuning & performance knobs
+
+**Index**
+
+* `--index {hnsw,ivfpq,flat}` | `--hnsw_m` `--hnsw_efc` `--hnsw_efs` | `--ivf_nlist` `--pq_m` `--pq_nbits`
+
+**LLM (optional)**
+
+* `--llm_backend {auto,vllm,llama-cpp}`
+* `--llm_hf_model_id`, `--llm_gguf_path` (auto-selected to Qwen3-4B GGUF on CPU)
+* `--llm_concurrency`, `--llm_tp` (tensor parallel for vLLM), `--llm_n_threads` (llama-cpp)
+* `--vllm_quantization` (defaults to bitsandbytes)
+
+**Batch concurrency & CPU threads**
+
+* `--rows_concurrency` (how many rows processed concurrently; defaults to LLM concurrency)
+* `--cpu_pool` (sized ThreadPool for `asyncio.to_thread` work)
+* `--faiss_threads` (FAISS OpenMP threads)
+* `--blas_threads` (NumPy/MKL/OpenBLAS cap via threadpoolctl)
+
+**Fuzzy**
+
+* `--fuzzy_workers` (RapidFuzz cdist; `-1` = all cores)
+
+**Scoring weights**
+
+* `--weights_desc` `--weights_kw` `--weights_direct` `--weights_sty` (default `0.30/0.40/0.20/0.10`)
+
+**Legacy rerank switch**
+
+* `--rerank {none,rapidfuzz}` (when LLM is off)
+
+---
+
+## Methodology details
+
+### Embeddings & FAISS
+
+* SentenceTransformer encodes every `STR` in SNOMED/RxNorm (L2-normalized float32).
+* FAISS index type is configurable (`HNSW` default).
+* Search returns similarities that we map to `[0,1]` by `cos_to_01(x) = clip((x+1)/2)`.
+
+### LLM-assisted **query expansion**
+
+* System prompt constrains responses to **strict XML** with one or more `<candidate>` blocks:
+
+  * `<alternate_keywords>` (brand/colloquial terms included)
+  * `<description>` (1–3 sentences)
+  * `<possible_semantic_term_types>` (from our STY inventory)
+* We **cap to ~5 candidates** and feed these signals into the semantic search.
+
+### Multi-signal scoring (per-row)
+
+For each candidate row we compute:
+
+* **desc**: cosine(description, STR)
+* **kw**: max cosine over all alternate keyword vectors
+* **direct**: cosine(input text, STR)
+* **sty**: STY similarity via a **pre-embedded STY vocabulary** (`sty_vocab`, `sty_embeddings.npy`)
+
+Weighted sum:
+
+```
+composite = wd*desc + wk*kw + wr*direct + ws*sty
+```
+
+### Fuzzy re-rank (stability to noise)
+
+* Build a **pool** of the best rows (e.g., 500 by composite), then re-rank by **RapidFuzz**:
+
+  * Stage-1: fast `ratio` to prefilter choices for each anchor (query + top alt keywords)
+  * Stage-2: `token_set_ratio` on the reduced set
+* Implemented as **batched cdist** calls with parallel workers.
+
+### Per-code aggregation
+
+Many vocabularies have multiple rows per code (synonyms, forms, etc.). We:
+
+1. Reconstruct or load vectors for **all rows** of each surviving code.
+2. Recompute the components against the best available representations (query/desc/kws).
+3. Score the **code** by:
+
+```
+final = mean(composite over all rows) *
+        mean(composite over top-pool rows for that code) *
+        sqrt(log10( percentage_of_code_rows_in_top_pool ))
+```
+
+This rewards codes that are **consistently** strong across their variants.
+
+### Optional LLM final re-rank
+
+* We send a compact list: `system | code | STY | TTY | STR` for the top candidates.
+* The LLM outputs strict XML `<choice>` blocks with `<code>` + `<reasoning>`.
+* Output is intersected with our candidates (we keep order) and filled if needed.
+
+### Resource-awareness
+
+* `configure_cpu_threading()` sets FAISS OMP threads and caps BLAS pools; heavy sections run inside a `threadpool_limits` context.
+* Async path sizes a single `ThreadPoolExecutor` and sets `CPU_POOL` env; internal semaphores for embeddings/FAISS use that to avoid oversubscription.
+
+---
+
+## Rules compliance
+
+* **Open-source only**: uses SentenceTransformers, FAISS, RapidFuzz, vLLM/llama-cpp, PyTorch — all open-source.
+* **No external/proprietary APIs**: LLMs run locally via vLLM or llama-cpp; Hugging Face downloads public models if you opt in.
+* **Outputs include**: system, code, description (+ STY/TTY) exactly as requested.
+
+---
+
+## Deliverables checklist (for evaluators)
+
+* ✅ **Public repo** with runnable code (`clean.py`)
+* ✅ **README** (this file) explaining approach, setup, and usage
+* ✅ **Run script examples** under “Quickstart / Run”
+* ✅ **Produces outputs** with required columns
+* ✅ **Handles ambiguity/noise** via LLM expansion + fuzzy re-rank
+* ✅ **Complete docs** for dataset columns (see *Column Reference Guide.md*)
+* ✅ **Demo options**:
+
+  * `query` for quick console demo
+  * `batch` to generate a full **`out.xlsx`** for the judges
+
+---
+
+## Troubleshooting
+
+* **`NameError: nullcontext`**
+  Import was omitted in some Python builds. Add:
+
+  ```python
+  from contextlib import nullcontext
+  ```
+* **CUDA/VLLM issues**
+  Make sure your CUDA driver matches the PyTorch/cu version. If you’re on a managed Linux box that needs CUDA libs:
+
+  ```bash
+  sudo apt-get update
+  sudo apt-get install -y cuda-toolkit-12-8 libcurand-dev-12-8
+  ```
+
+  Or simply run with `--llm_backend llama-cpp` to stay CPU-only.
+* **Slow/oversubscribed CPU**
+  Try: `--blas_threads 1 --faiss_threads 1 --cpu_pool 8 --rows_concurrency 8`
+* **Memory pressure while building**
+  Use smaller batch: `--batch 256` and prefer `IVFPQ` index:
+
+  ```bash
+  --index ivfpq --ivf_nlist 16384 --pq_m 64 --pq_nbits 8
+  ```
+* **Fuzzy stage too slow**
+  Lower the pool or worker count: `--fuzzy_workers 4` and/or reduce `AdvancedParams.fuzzy_pool` (see code defaults).
+
+---
+
+## Notes on data & licensing
+
+* **SNOMED CT** is licensed; use only within terms permitted for your jurisdiction/institution.
+* **RxNorm** is released by the U.S. National Library of Medicine; check their terms.
+* This repo assumes you have permission to use the provided parquet files for the hackathon.
+
+---
+
+### Appendix: Example commands (copy/paste)
+
+**Build**
+
+```bash
+python clean.py build \
+  --snomed_parquet snomed_all_data.parquet \
+  --rxnorm_parquet rxnorm_all_data.parquet \
+  --out_dir indices
+```
+
+**Batch (LLM off)**
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx --out_file out.xlsx \
+  --use_llm_clean false --use_llm_rerank false \
+  --llm_backend auto \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+**Batch (LLM on)**
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx --out_file out.xlsx \
+  --use_llm_clean true --use_llm_rerank true \
+  --llm_backend auto \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+**Single query**
+
+```bash
+python clean.py query \
+  --text "chest xr" \
+  --entity_type "Procedure" \
+  --index_dir indices \
+  --use_llm_clean true --use_llm_rerank true \
+  --llm_backend auto
+```
+
+---
+
+## Acknowledgements
+
+* FAISS, SentenceTransformers, RapidFuzz, vLLM, llama-cpp, PyTorch, and the maintainers of Qwen models.
+* SNOMED CT and RxNorm teams for the vocabularies used in this challenge.
+
+---
+
+arch.md:
+# Clinical Concept Harmonizer — Architecture Deep Dive
+
+> Version: 2025-01 · Target Problem: HiLabs Hackathon 2025 · Repository entrypoint: `clean.py`
+
+This document explains the system in **extreme detail**: goals, data model, build-time/indexing pipeline, query-time pipeline, algorithms, concurrency model, GPU/CPU execution plans, memory management, ranking theory, prompt engineering, configuration knobs, failure handling, performance characteristics, and extensibility. It is designed as a companion to the code in `clean.py`.
+
+---
+
+## 1) Goals, Non‑Goals, and Constraints
+
+### Goals
+
+* **High-accuracy clinical concept mapping** from messy inputs to **RxNorm** (meds) and **SNOMED CT** (everything else).
+* **No external paid APIs**; use open-source models only.
+* **Scalable** to millions of catalog rows with affordable compute (FAISS + compact embedding model).
+* **Latency-friendly** for interactive queries **and** high-throughput for batch.
+* **Deterministic fallback** when LLM is disabled (legacy ANN + fuzzy).
+
+### Non‑Goals
+
+* Not a general medical QA system; it maps short clinical strings to codes.
+* Not a closed-loop ontology editor; the catalogs are provided as immutable inputs.
+
+### Key Constraints
+
+* Must run on **CPU-only** (using `llama-cpp`) and **GPU** (using `vLLM`).
+* **Open-source only**: sentence transformers, faiss, rapidfuzz, vLLM, llama.cpp.
+* **Reproducible** artifacts: indices + vector files + meta.
+
+---
+
+## 2) Data Model and Files
+
+### Catalog schema (after preparation)
+
+Each vocabulary (SNOMED, RxNorm) is normalized to the same internal schema:
+
+| Column   | Role                                         |
+| -------- | -------------------------------------------- |
+| `row_id` | Stable integer id (0..N-1) for FAISS mapping |
+| `CODE`   | String code in source vocabulary             |
+| `STR`    | Human-readable term (name)                   |
+| `CUI`    | UMLS concept id (if provided)                |
+| `TTY`    | Term type (PT/SY/SCD/BN/…)                   |
+| `STY`    | Semantic type string                         |
+| `System` | `SNOMEDCT_US` or `RXNORM`                    |
+
+### Build artifacts written to `--out_dir`
+
+* `snomed_catalog.parquet`, `rxnorm_catalog.parquet`: canon catalogs.
+* `snomed.index.faiss`, `rxnorm.index.faiss`: FAISS indices (HNSW/IVFPQ/Flat-IP).
+* `snomed_vectors.f32`, `rxnorm_vectors.f32`: memory-mapped normalized embedding matrices (float32).
+* `sty_vocab.json` + `sty_embeddings.npy`: vocabulary of STYs present across both catalogs and their embeddings.
+* `meta.json`: complete reproducibility metadata (embedding model id, index type/params, paths, dim, etc.).
+
+**Why memory-mapped vectors?**
+
+* Reconstructing vectors from FAISS can be slow/imprecise depending on index type. Persisting the exact normalized embedding used at build time enables fast, vectorized, per-code aggregation later.
+
+---
+
+## 3) Build-Time Pipeline (Indexer)
+
+**Entry:** `python clean.py build ...`
+
+### Steps
+
+1. **Load Parquet catalogs** (SNOMED, RxNorm) and call `prepare_catalog()` to project onto the common schema and assign `row_id`.
+2. **Load Sentence Embedding model** (default: `google/embeddinggemma-300m`).
+3. **Embed all `STR` values** in batches with GPU OOM backoff.
+4. **Construct FAISS index** per system:
+
+   * **HNSW Flat-IP**: default. Configurable `M`, `efConstruction`, `efSearch`.
+   * **IVFPQ**: trains on a sample; lower memory, fast search at large scale.
+   * **Flat-IP**: exact but memory/latency heavy.
+5. **Add vectors with IDs** (`row_id`) and persist index files.
+6. **Persist memory-mapped matrices** of the same vectors (`*.f32`).
+7. **Embed STY vocabulary** once and store `sty_embeddings.npy` for quick semantic-type similarity.
+8. **Write `meta.json`** to tie everything together.
+
+### Similarity Metric
+
+All embeddings are L2-normalized; we use **inner product** in FAISS which equals cosine similarity. We convert to [0,1] via `cos_to_01(x) = clip(0.5*(x+1), 0, 1)`.
+
+---
+
+## 4) Query-Time Pipeline — Two Modes
+
+**Entry:** `python clean.py query ...` (single) or `batch` (multi-row).
+
+We implement two matchers:
+
+1. **Legacy ANN + Fuzzy** (**no LLM**): direct semantic search with optional RapidFuzz rerank; system preference (RxNorm for meds else SNOMED); thresholds and margins for switching.
+2. **Advanced LLM-Assisted Pipeline** (**default**): multi-signal, multi-candidate reasoning with optional final LLM *code-level* rerank.
+
+### 4.1 Legacy Pipeline (deterministic, low-cost)
+
+* Embed query once; FAISS-search both indices.
+* Optionally rerank each system’s topK using `rapidfuzz.token_set_ratio` against the original query.
+* Pick **preferred system** (`choose_system(entity_type)`), but **switch** if alternative beats it by `--alt_margin` and passes `--min_score`.
+* Return topK rows from the chosen system.
+
+**When to use:** CPU-only, strict determinism, or when LLM is not desired.
+
+### 4.2 Advanced LLM-Assisted Pipeline (default)
+
+#### High-level idea
+
+Use the LLM to **expand** the user input into multiple plausible **candidates** (synonyms/brands/abbreviations + short description + likely STYs). Then score codes using a **weighted mixture of signals** derived from description/keywords/direct match/STY similarity. Finally, **fuzzy re-rank**, **aggregate to per-code scores**, and optionally apply an **LLM reranker** on a small shortlist.
+
+#### Signal Definitions
+
+Let `q` be the raw query. For each catalog row `r` with text `STR_r` and STY `STY_r` we estimate:
+
+* **Direct semantic**: `S_dir(r) = cos01(emb(q) · emb(STR_r))`
+* **Description semantic** (from LLM): `S_desc(r) = max_c cos01(emb(desc_c) · emb(STR_r))`
+* **Alt-keyword semantic**: `S_kw(r) = max_kw cos01(emb(kw) · emb(STR_r))`
+* **STY compatibility**: `S_sty(r) = max_{sty_pred ∈ STY_pred} cos01(emb(sty_pred) · emb(STY_r))`
+
+> `cos01(x) = clip(0.5*(x+1), 0, 1)` converts cosine to [0,1].
+
+Then, the **row-level composite**
+
+[
+C(r) = w_{desc}·S_{desc}(r) + w_{kw}·S_{kw}(r) + w_{direct}·S_{dir}(r) + w_{sty}·S_{sty}(r)
+]
+
+with defaults `w_desc=0.30, w_kw=0.40, w_direct=0.20, w_sty=0.10` (tunable CLI flags).
+
+#### Candidate Expansion (LLM)
+
+* **System prompt** (`EXPAND_SYSTEM_PROMPT`) constrains output to **pure XML** of `<candidate>` blocks.
+* For each candidate:
+
+  * `<alternate_keywords>`: 2–10 short aliases/brands/abbreviations.
+  * `<description>`: 1–3 sentence medical explanation.
+  * `<possible_semantic_term_types>`: pick from the **provided STY list** only.
+* Parser `extract_xml_candidates()` is defensive: handles missing fields, odd whitespace, single-block fallbacks.
+
+#### Coarse Retrieval (FAISS)
+
+For each signal family we perform **vector search** against **both** indices:
+
+* Once for the **direct** query (`q`).
+* Once per **candidate description**.
+* **Batched** over all **alternate keywords** (much faster than per-kw loops).
+
+Each hit contributes to its row’s `score_components` via the `cos01`-normalized score.
+
+#### Fuzzy Re-rank (RapidFuzz)
+
+We take the top **`fuzzy_pool`** rows by composite (default 500), then add a lexical check using **two-stage** RapidFuzz:
+
+1. **Prefilter** with `ratio` on normalized strings for each anchor (query + best K keywords). Keep top-N indices union.
+2. **Refine** candidates with `token_set_ratio` in parallel (`cdist`, `workers=-1` → all cores).
+
+The `fuzzy` score is **not** blended with the composite numerically here; we simply **sort** by fuzzy for a **stability** pass and truncate to `top_pool_after_fuzzy` (default 250). This protects against semantic drift from embeddings when inputs are very short.
+
+#### Per-Code Aggregation and Boost
+
+Rows are bucketed by `(System, CODE)`. For each code we compute:
+
+* `avg_all` = mean of **recomputed** composites across **all** rows of the code (using **memory-mapped vectors** for speed). Recompute uses the **best available** signals for the query (desc, kw, direct, STY).
+* `avg_500` = mean of composites across only the rows that survived the fuzzy pool (`rows_top`).
+* Let `p = 100 × |rows_top| / |rows_all|`. Compute a conservative **frequency boost**:
+
+[
+\text{boost}(p) = \sqrt{\log_{10}(\max(1.0001, p))}
+]
+
+Final **code score**:
+
+[
+F(\text{code}) = \text{avg_all} × \text{avg_500} × \text{boost}(p)
+]
+
+This favors codes that are **consistently strong** across their terms and have **good representation** in the top pool, mitigating outliers.
+
+#### Final LLM Rerank (Optional)
+
+* Build a small candidate list (default 30 codes) with **representative string** per code (prefers PT/FN/SCD via a rank map).
+* Provide the LLM with:
+
+  * Original query + entity type.
+  * **Expanded understanding** summary (all candidates, their keywords and STYs).
+  * Compact list `system | code | STY | TTY | STR` for each candidate.
+* The LLM returns a **pure XML list** of `<choice>` with **only codes** and a short reason. We re-map codes back to best `(System, Code)` pair and **preserve at most `final_output_k`**.
+* If LLM returns fewer items, we **fill** from the highest-scoring remaining codes.
+
+---
+
+## 5) LLM Backends and Auto‑Selection
+
+Two interchangeable backends via `LLMConfig`:
+
+* **vLLM** (GPU): loads HF weights (defaults to **Qwen3 4B** for smaller VRAM; **GPT‑OSS‑20B** otherwise) with optional quantization (`bitsandbytes`, `awq`, `gptq`, `mxfp4`).
+* **llama-cpp** (CPU): loads **GGUF** (defaults to Unsloth Qwen3 4B Q4_K_XL). Threaded generation via `ThreadPoolExecutor`.
+
+**Auto policy** (`pick_llm_backend_and_model`):
+
+* If **no GPU** → `llama-cpp` with Qwen3 4B GGUF (downloaded from HF if needed).
+* If GPU exists but **<22 GB per GPU** → **vLLM + Qwen3 4B**.
+* Else → **vLLM + GPT‑OSS‑20B**.
+
+LLM is used in two places only:
+
+1. **Expansion** (keyword + desc + STY hints) — many parallel short prompts.
+2. **Final rerank** — one prompt per query, small payload.
+
+Both are **bounded** and run concurrently.
+
+---
+
+## 6) Concurrency Model and Threading
+
+### Async Orchestration
+
+* Batch mode creates an **async event loop** and limits shared resources using semaphores:
+
+  * `_embed_sem`: throttles GPU-heavy embedding jobs (defaults to `2×num_gpus`, capped by `CPU_POOL`).
+  * `_faiss_sem`: throttles FAISS searches (≈ `2×_embed_sem`).
+* A configurable **row concurrency** (`--rows_concurrency`) controls how many records are processed in parallel at the pipeline level.
+
+### LLM Concurrency
+
+* **vLLM**: uses its own internal scheduler; we set `max_num_seqs` and enable **prefix caching** to exploit identical system prompts.
+* **llama-cpp**: the engine is not thread-safe for concurrent calls; we serialize each chat completion via an **async lock**, but run the blocking call in a **thread pool** sized by `LLMConfig.concurrency`.
+
+### CPU Thread Control (`configure_cpu_threading`)
+
+* Sets FAISS **OpenMP** threads via `faiss.omp_set_num_threads`.
+* Caps BLAS backends via `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, `BLIS_NUM_THREADS`, `NUMEXPR_NUM_THREADS`.
+* Optionally uses `threadpool_limits` context to bound NumPy/Scipy and friends during heavy sections.
+
+### Why two levels of concurrency?
+
+* **Pipeline level** (rows): hides per-row variability and IO.
+* **Component level** (emb/FAISS/LLM): prevents head-of-line blocking and GPU OOM while keeping hardware busy.
+
+---
+
+## 7) Memory Management and OOM Resilience
+
+* Embedding uses **backoff batching** on CUDA OOM: halving batch size until it fits (down to 1).
+* `clear_cuda_memory()` aggressively frees caches and triggers GC between phases.
+* `model_roundtrip_cpu_gpu()` can be used as a VRAM defragmentation nudge.
+* FAISS indices live on **CPU RAM**; vectors are normalized **once** and stored on disk as **memmaps** for later **vectorized** scoring without rebuilding.
+
+---
+
+## 8) Prompt Engineering and XML Parsing
+
+### Expansion Prompt
+
+* Strongly constrained to **ASCII XML** with only three tags. We provide the **finite list of allowed STYs** so the model cannot invent new labels.
+* We encourage **multiple candidates** when the input is ambiguous (e.g., "XR chest" → imaging vs. order).
+
+### Rerank Prompt
+
+* Positions the LLM as an adjudicator over a **shortlist of standardized codes**. The model does **not invent new codes**—it only ranks provided ones.
+* Output again is pure XML to simplify parsing.
+
+### Parsers
+
+* `extract_xml_candidates()`/`extract_xml_choices()` use robust regex splits with graceful fallbacks (single-block or partial field missing → skip/empty lists).
+
+---
+
+## 9) Algorithmic Complexity & Performance Notes
+
+Let `N_sno`, `N_rx` be catalog sizes, `d` embedding dim.
+
+* **Build time**: `O((N_sno+N_rx) × cost(embed)) + O(N log N)` (index construction), dominated by embedding.
+* **Query time** (per row):
+
+  * Embedding: `O(#texts × d)`; typically small (query + 0–10 KWs + ≤1 desc).
+  * FAISS search: `O(log N)` average for HNSW; `O(d × efSearch)` tuned by `efSearch`.
+  * Fuzzy cdist: `O(A × M)` where `A` anchors (≤9) and `M` reduced set (≤prefilter). Leveraging C++ + multithread keeps it small.
+  * Aggregation uses memmap **matrix multiplications** for each code (vectorized in NumPy): highly efficient.
+
+**Empirical**
+
+* Build: ~11 min on 1×H100, 30–60 min on T4-class GPUs; ~10GB disk for artifacts (depends on index type).
+* Batch LLM-off: seconds to sub-minute for typical test sheets.
+* Batch LLM-on: depends on GPU and concurrency settings; designed to scale linearly with hardware.
+
+---
+
+## 10) Configuration Knobs (Cheatsheet)
+
+### Build
+
+* `--model`: sentence embedding model id.
+* `--index`: `hnsw|ivfpq|flat` and their params (`--hnsw_m`, `--hnsw_efc`, `--hnsw_efs`, `--ivf_nlist`, `--pq_m`, `--pq_nbits`).
+* `--batch`: embedding batch size.
+
+### Query/Batch (Core)
+
+* `--use_llm_clean`, `--use_llm_rerank`: toggle LLM stages.
+* `--topk`: final outputs per row.
+* `--rerank`: `none|rapidfuzz` legacy path option.
+* `--min_score`, `--alt_margin`: legacy system-switch policy.
+
+### Weights and Pools
+
+* `--weights_desc`, `--weights_kw`, `--weights_direct`, `--weights_sty`.
+* Advanced params (compiled): `semantic_top_desc`, `semantic_top_kw_each`, `fuzzy_pool`, `top_pool_after_fuzzy`, `final_llm_candidates`.
+
+### LLM Backend
+
+* `--llm_backend`: `auto|vllm|llama-cpp`.
+* `--llm_hf_model_id`, `--llm_gguf_path`.
+* Generation: `--llm_max_new_tokens`, `--llm_temperature`, `--llm_top_p`.
+* Scaling: `--llm_concurrency`, `--llm_tp`, `--llm_n_threads`, `--vllm_quantization`.
+
+### CPU/Threads
+
+* `--blas_threads`, `--faiss_threads`, `--cpu_pool`, `--fuzzy_workers`.
+* Batch: `--rows_concurrency`.
+
+---
+
+## 11) Failure Modes & Mitigations
+
+| Risk                   | Symptom                           | Mitigation                                                                        |
+| ---------------------- | --------------------------------- | --------------------------------------------------------------------------------- |
+| CUDA OOM               | Embedding crashes                 | backoff batches; clear CUDA cache; lower `--batch`; use CPU or smaller model      |
+| vLLM VRAM limits       | Engine fails to initialize        | auto-select Qwen4B; set `--vllm_quantization` to `mxfp4`/`awq`; reduce `--llm_tp` |
+| llama-cpp contention   | Random slowdowns                  | serialize access (`_lock`); adjust `--llm_concurrency`; increase `--n_threads`    |
+| Over-threading         | CPU pegged with little throughput | set `--blas_threads`, `--faiss_threads`, `--cpu_pool` sanely                      |
+| Bad LLM XML            | No candidates/choices parsed      | robust regex + fallbacks; pipeline still returns **non-LLM** results              |
+| Ambiguous short inputs | Wrong concept                     | rely on multi-candidate expansion + fuzzy; consider raising `w_kw` temporarily    |
+
+---
+
+## 12) Security, Privacy, and Reproducibility
+
+* **Data never leaves the machine**: no remote API calls; only HF hub downloads of **open** model weights (optional token for rate limits).
+* **Reproducibility**: `meta.json` captures model id + dims + index params + filenames. Artifacts are pure files—no hidden state.
+* **Determinism**: Legacy path is deterministic; LLM path can vary slightly across seeds/hardware; final lists are constrained to existing codes.
+
+---
+
+## 13) Extensibility
+
+* **Add a new vocabulary**: prepare same 7-column schema; train/embed; add new FAISS index + memmap; extend `choose_system()` policy.
+* **New signal**: add term-level signal and weight in `AdvancedWeights` + accumulation in `score_components`.
+* **Alternate embedding model**: update `--model` at build; re-build indices and STY embeddings.
+* **Richer rerank**: swap RapidFuzz scorer or combine fuzzy numerically in the composite if desired.
+
+---
+
+## 14) Worked Example (End-to-End)
+
+Input row:
+
+```
+Input Entity Description: "chest xr"
+Entity Type: "Procedure"
+```
+
+1. **LLM expansion** → candidates: {"chest x-ray", "cxr", "radiograph chest"}, desc ≈ “plain radiograph of the chest”, STY hints "Diagnostic Procedure".
+2. **Semantic searches**: direct on "chest xr"; desc search; batched kw searches.
+3. **Row composites** built across both indices.
+4. **Fuzzy** stage boosts strings containing both tokens {"chest", "x-ray"}.
+5. **Aggregate** per code: many SNOMED rows share X-ray procedures; `avg_all` and `avg_500` select the consistent code; frequency boost favors codes with multiple supporting synonyms.
+6. **LLM rerank** (optional): chooses the best procedure code and explains briefly.
+
+---
+
+## 15) Pseudocode (Advanced Matcher)
+
+```text
+exp_cands = LLM.expand(q, entity_type)
+q_vec = emb(q)
+for cand in exp_cands:
+  d_vec = emb(cand.description)
+  kw_vecs = emb(cand.keywords)
+  for sys in {SNOMED,RXNORM}:
+    add_scores(search(sys, d_vec), "desc")
+    add_scores_batch(search(sys, kw_vecs), "kw")
+  add_scores(search(SNOMED, q_vec), "direct")
+  add_scores(search(RXNORM, q_vec), "direct")
+  apply_sty_map(predicted_stys)
+
+rows = top_by_composite(fuzzy_pool)
+rows = fuzzy_resort_and_truncate(rows, top_pool_after_fuzzy)
+
+codes = group_by_code(rows)
+for code in codes:
+  all_vecs = memmap_vectors(code)
+  recompute composites vs {q_vec, d_vec, kw_vecs, sty_map}
+  avg_all, avg_500, p = reduce(code)
+  score = avg_all * avg_500 * sqrt(log10(max(1.0001,p)))
+
+shortlist = topN(codes)
+if use_llm_rerank:
+  final = LLM.rerank(shortlist, context)
+else:
+  final = shortlist[:K]
+```
+
+---
+
+## 16) Known Limitations & Future Work
+
+* **Unit handling**: current system treats dosage/quantities lexically; a dose parser could improve RxNorm precision.
+* **Negation/qualifiers**: phrases like “rule out pneumonia” may map too strongly to the disease; adding a **clinical negation** detector would help.
+* **Context window**: single-field input; future: multi-column fusion (age/sex/lab units) for disambiguation.
+* **Learning-to-rank**: the score weights are fixed; we could learn them from labeled data.
+* **Cache**: response caching (query→result) for repeats in batch runs.
+
+---
+
+## 17) Practical Tuning Recipes
+
+* **CPU-only laptop**: `--use_llm_clean false --use_llm_rerank false --rerank rapidfuzz --blas_threads 4 --faiss_threads 4`.
+* **Single 8–12GB GPU**: `--llm_backend auto --vllm_quantization mxfp4 --llm_concurrency 64 --rows_concurrency 64`.
+* **Accuracy-first**: increase `w_kw` and `w_desc`; ensure LLM stages enabled; raise `final_llm_candidates` to 50.
+* **Throughput-first**: set `use_llm_rerank=false`; keep expansion on; reduce `semantic_top_*` and `fuzzy_pool`.
+
+---
+
+## 18) CLI Quick Reference
+
+### Build
+
+```bash
+python clean.py build \
+  --snomed_parquet snomed_all_data.parquet \
+  --rxnorm_parquet rxnorm_all_data.parquet \
+  --out_dir indices \
+  --model google/embeddinggemma-300m
+```
+
+### Batch (LLM on)
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx --out_file out.xlsx \
+  --use_llm_clean true --use_llm_rerank true \
+  --llm_backend auto \
+  --llm_concurrency 200 --rows_concurrency 128
+```
+
+### Batch (LLM off)
+
+```bash
+python clean.py batch \
+  --index_dir indices \
+  --in_file Test.xlsx --out_file out.xlsx \
+  --use_llm_clean false --use_llm_rerank false \
+  --rerank rapidfuzz
+```
+
+### Single Query
+
+```bash
+python clean.py query \
+  --index_dir indices \
+  --text "hcv rna" \
+  --entity_type "Procedure" \
+  --use_llm_clean false --use_llm_rerank false
+```
+
+---
+
+## 19) File/Module Map
+
+* **`clean.py`** — all logic: build, load, query, batch; FAISS, embeddings, LLM adapters, fuzzy, scoring, CLI.
+* **Artifacts in `indices/`** — indices, memmaps, STY embeddings, meta.
+* **`Test.xlsx`** — input; **`out.xlsx`** — output with columns: system, code, description, STY, TTY (+ optional topK columns).
+
+---
+
+## 20) Summary
+
+This architecture **blends** fast vector search, lexical sanity checks, semantic-type priors, and *constrained* LLM reasoning. It is:
+
+* **Accurate** (multi-signal evidence + optional LLM adjudication),
+* **Scalable** (FAISS + batched embeddings + memmaps),
+* **Portable** (GPU/CPU), and
+* **Reproducible** (file artifacts + meta).
+
+The system is purpose-built for the Hackathon’s harmonization task while remaining extensible for real-world production use.
+
+
+detailed explanation of everything by another ai:
+# Clinical Concept Harmonizer — Architecture (arch.md)
+
+**Version:** Jan 2025
+**Owner:** HiLabs
+**Scope:** RxNorm + SNOMED CT concept matching with LLM-assisted expansion & ranking
+
+---
+
+## 1) Executive summary
+
+This service normalizes messy clinical text (medications, labs, diagnoses, procedures) into standardized codes from **RxNorm** and **SNOMED CT**. It combines:
+
+* **Dense retrieval** using a Sentence-Transformer embedding model and FAISS indices (HNSW / IVFPQ / Flat-IP).
+* **LLM-assisted query expansion** (alternate keywords, clarifying description, candidate semantic types) and **optional LLM re‑ranking** of final codes.
+* **Multi‑signal scoring** that blends: description match, keyword match, direct query match, and **STY** (Semantic Type) similarity.
+* **Fuzzy matching** (RapidFuzz) to re-rank a large pool before per‑code aggregation and final selection.
+* **High‑throughput batch pipeline** with asyncio + thread pools; CPU/GPU aware; memory‑mapped vectors; careful CUDA hygiene.
+
+The result is a robust, scalable matcher that outperforms pure string or pure embedding baselines, while keeping the legacy non‑LLM path fully available.
+
+---
+
+## 2) High‑level dataflow
+
+```
+┌────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+│  Raw Text  │ ───▶ │  LLM Expansion       │ ───▶ │  Semantic Retrieval   │
+│ (query,    │      │  (keywords, desc,    │      │  (FAISS over Rx/SN)   │
+│ entity type)│     │   predicted STYs)    │      │  + multi-signal scores│
+└────────────┘      └──────────────────────┘      └────────┬─────────────┘
+                                                            │
+                                                            ▼
+                                                ┌─────────────────────────┐
+                                                │ Fuzzy Re-rank (RapidFuzz)│
+                                                └────────┬────────────────┘
+                                                         │ (top pool)
+                                                         ▼
+                                            ┌─────────────────────────────┐
+                                            │ Per‑code aggregation & boost │
+                                            └────────┬────────────────────┘
+                                                     │
+                                                     ▼
+                                   ┌───────────────────────────────────────────┐
+                                   │ Optional LLM final re‑rank of top codes   │
+                                   └───────────────────────────────────────────┘
+                                                     │
+                                                     ▼
+                                             Final ranked code(s)
+```
+
+**Build path (one‑time per catalog):**
+
+```
+Parquet catalogs ─▶ catalog prep ─▶ batched embedding ─▶ FAISS index write
+                                     └─▶ STY vocab + embeddings (npy/json)
+```
+
+---
+
+## 3) Files & artifacts
+
+During **build** (`build_indices`):
+
+* `snomed.index.faiss`, `rxnorm.index.faiss` — FAISS indices.
+* `snomed_catalog.parquet`, `rxnorm_catalog.parquet` — slimmed catalogs with columns
+  `[row_id, CODE, STR, CUI, TTY, STY, System]`.
+* `snomed_vectors.f32`, `rxnorm_vectors.f32` — memory‑mapped float32 matrices (normalized embeddings, row‑aligned).
+* `sty_vocab.json` — unique STY inventory across both systems.
+* `sty_embeddings.npy` — normalized embeddings for each STY token for fast similarity.
+* `meta.json` — model + index metadata.
+
+At **query/batch** time these are loaded via `load_bundle(...)` and kept in memory/memmap for high throughput.
+
+---
+
+## 4) Core modules & responsibilities
+
+### 4.1 Device, memory, and threading
+
+* `gpu_summary`, `clear_cuda_memory` — detect GPUs, report VRAM; aggressively clear caches after large phases.
+* `configure_cpu_threading` — caps BLAS/FAISS threads; integrates with `threadpoolctl` via a context manager.
+* `default_concurrency` — scales with GPU count or CPU cores.
+
+### 4.2 Embeddings & FAISS
+
+* `load_model` / `embed_texts` — loads SentenceTransformer model; OOM‑resilient batching with backoff; always normalizes.
+* Index builders: `build_hnsw`, `build_ivfpq`, `build_flat` (all IP/cosine‑equivalent on normalized vectors).
+* `prepare_catalog` — trims and normalizes catalog columns; assigns stable `row_id`.
+* `train_ivfpq_if_needed` — trains IVF‑PQ on a sample of code strings.
+* `faiss_search`, `reconstruct_vec` — light wrappers for search and vector recon.
+
+### 4.3 LLM backends
+
+* `pick_llm_backend_and_model` selects **vLLM** (GPU) or **llama.cpp** (CPU/GGUF) automatically.
+* **Sync**: `LLMClient` (vLLM or llama.cpp) for single‑query mode.
+* **Async**: `AsyncLLMClient` (vLLM async engine or llama.cpp + thread pool) for batch throughput.
+* Quantization defaults (vLLM): `bitsandbytes`. GGUF path is used only for llama.cpp.
+* Concurrency control: semaphore in `AsyncLLMClient`, plus global thread‑pool for CPU work.
+
+### 4.4 Prompts & XML parsing
+
+* **Expansion prompts** (`EXPAND_*`) produce XML `<candidate>` blocks with:
+  `alternate_keywords`, `description`, `possible_semantic_term_types`.
+* **Rerank prompts** (`RERANK_*`) accept a candidate blob and return ordered `<choice>` codes with reasons.
+* Parsers: `extract_xml_candidates`, `extract_xml_choices` — robust to minor formatting issues, fall back to simple regex.
+
+### 4.5 Scoring & ranking
+
+* **Signals:**
+
+  * `desc` — cosine match to LLM description.
+  * `kw` — max cosine over alternate keywords.
+  * `direct` — cosine to the raw input query.
+  * `sty` — STY similarity via pre‑embedded STY vocabulary.
+* **Weights:** `AdvancedWeights(w_desc=.30, w_kw=.40, w_direct=.20, w_sty=.10)` (CLI‑tunable).
+* **Fuzzy:** `fuzzy_scores_max` uses RapidFuzz `ratio` prefilter + `token_set_ratio` refine across anchors `{query} ∪ top‑KWs`.
+* **Aggregation:** collapse rows to **per‑code**
+
+  * Recompute composites using memmapped vectors for all rows of a code.
+  * Compute `avg_all` and `avg_500` (the average on the top rows bucket) and
+    boost by `sqrt(log10(percentage_in_top_pool))`.
+* **Final selection:** take top‑N by aggregated score, optional LLM re‑rank (codes only) to respect system preferences.
+
+### 4.6 Pipelines
+
+* **Legacy (non‑LLM)**: single embedding search per system, optional RapidFuzz rerank, preference heuristic chooses RxNorm vs SNOMED.
+* **Advanced (LLM)**: implemented in `advanced_match_one` and `advanced_match_one_async`.
+
+  * Incorporates query expansion, multi‑signal retrieval, fuzzy re‑rank, code aggregation, optional LLM final re‑rank.
+
+### 4.7 CLI & modes
+
+* `build`: construct indices & STY artifacts.
+* `query`: single query; tabular printout of top‑k.
+* `batch`: high‑throughput async processor with progress bar, `include_topk` columns, and CSV/XLSX output.
+
+---
+
+## 5) Detailed sequence diagrams
+
+### 5.1 `build` (index creation)
+
+1. `maybe_hf_login` if token passed.
+2. Load embedding model; read full Parquet catalogs.
+3. `prepare_catalog` → standardized tables with `row_id`.
+4. Allocate memmaps: `*.f32` of shape `[n_rows, dim]` per system.
+5. For each system:
+
+   * Construct index (`hnsw` | `ivfpq` | `flat`). Train IVF‑PQ if selected.
+   * In **batches**: embed `STR` → add vectors with **given row_ids**; persist vectors to memmap.
+   * Set HNSW `efSearch` and write FAISS index.
+6. Build **STY artifacts**: unique STY list; embed to `sty_embeddings.npy` (normalized).
+7. Persist `meta.json` with all knobs (model, dim, index params, file names).
+
+### 5.2 `query` (advanced path)
+
+1. Load bundle (indices, cats, memmaps, STYs, model). Configure HNSW `efSearch` and CPU threads.
+2. Initialize LLM backend (`LLMClient`) if any LLM knobs are enabled.
+3. LLM **expansion** → candidates (alt keywords, description, predicted STYs). If disabled, use a degenerate candidate.
+4. Compute `q_vec` for original text.
+5. For each candidate:
+
+   * Embed `description` → retrieve top‑K (desc‑signal) on both systems.
+   * Embed all `keywords` (batched) → retrieve (kw‑signal) on both systems.
+   * Run direct retrieval with `q_vec` (direct‑signal) on both systems.
+   * Compute **STY map** once via vector ops: `max cos(pred_STYs, sty_vocab)`; assign to any seen row’s STY.
+6. Compute **composite** per row using weights; take **fuzzy pool** (e.g., top‑500 by composite).
+7. **Fuzzy re‑rank** the pool using RapidFuzz (`ratio` prefilter → `token_set_ratio` refine), then keep top‑N (e.g., 250).
+8. **Per‑code aggregation**:
+
+   * For each code present in top pool, collect **all rows** for that code.
+   * Recompute composites **vectorized** from memmapped vectors against `{q_vec, desc_vec?, kw_vecs?, sty_map}`.
+   * Produce `final = avg_all * avg_500 * sqrt(log10(%_in_pool))` and rank codes.
+9. Optionally **LLM re‑rank** the top codes with terse justifications.
+10. Emit final top‑k rows (best representation per code favoring TTY `PT` > `FN/SCD/SBD` > others).
+
+### 5.3 `batch`
+
+* Same as `query`, but drives **`advanced_match_one_async`** under an async runner:
+
+  * Global CPU thread pool (`--cpu_pool`) for `to_thread` work.
+  * LLM concurrency semaphore (`--llm_concurrency`).
+  * Semaphores for embedding and FAISS async wrappers.
+  * Row‑level concurrency (`--rows_concurrency`).
+
+---
+
+## 6) Key algorithms & formulas
+
+### 6.1 Cosine→[0,1]
+
+All cosine scores are normalized to `[0,1]` via `cos_to_01(x) = clip(0.5*(x+1), 0, 1)` to unify metrics.
+
+### 6.2 Composite per row
+
+```
+composite_row = w_desc*desc + w_kw*kw + w_direct*direct + w_sty*sty
+```
+
+Signals are **max‑pooled** across multiple candidate expansions.
+
+### 6.3 Fuzzy re‑rank
+
+* Anchors = `{normalized(query)} ∪ top-K normalized(alt_keywords)` (deduped).
+* Stage 1: parallel `ratio` prefilter (keeps top‑M per anchor).
+* Stage 2: parallel `token_set_ratio` on union of kept indices.
+* Final fuzzy score = max across anchors, normalized to `[0,1]`.
+
+### 6.4 Per‑code aggregation & boost
+
+For each code:
+
+* Recompute composites for **every row** of the code (vectorized from memmap).
+* `avg_all` = mean composite over all rows; `avg_500` = mean over rows that landed in the fuzzy pool; `%_in_pool` = |rows_top|/|rows_all|.
+* Final score: `final = avg_all * avg_500 * sqrt(log10(max(1.0001, %_in_pool)))`.
+
+  * Intuition: combine overall semantic match, top‑pool concentration, and mild boost for codes with many high rows.
+
+---
+
+## 7) LLM integration details
+
+### 7.1 Backend selection
+
+* **Auto** logic (`pick_llm_backend_and_model`):
+
+  * If **no GPU** → `llama.cpp` with Qwen3‑4B‑Instruct GGUF.
+  * If GPU present with **<22 GB VRAM per GPU** → vLLM with Qwen3 4B HF (bnb quant).
+  * Else prefer larger “OSS‑20B” HF (bnb quant) for richer expansions.
+
+### 7.2 Prompts (summary)
+
+* **Expand (system/user)**: produce 1–5 `<candidate>` blocks with alt keywords, a short medical description, and predicted STYs (from the enumerated **sty_inventory**).
+* **Re‑rank (system/user)**: input is original query, entity type, the expansion summary, and a **candidate blob** (system|code|STY|TTY|name). Output is up to `K` `<choice>` blocks with `<code>` and `<reasoning>`.
+
+### 7.3 Robustness
+
+* XML is parsed with flexible regex; if the LLM returns malformed XML, we still salvage content.
+* Temperature defaults to `0.1` for stability; `top_p=0.9`; `max_new_tokens=512`.
+* vLLM enables prefix caching to amortize common system prompt costs.
+
+---
+
+## 8) Performance, capacity, and scaling
+
+### 8.1 Index size & memory
+
+* Vectors are **float32** (normalized). With `dim≈384–768`, each million rows is ~1.5–3.0 GB. Memmaps stream from disk; RAM pressure is limited.
+* HNSW typically offers the best query latency/recall trade‑off. IVF‑PQ enables large catalogs with smaller footprints at a minor recall cost.
+
+### 8.2 Throughput knobs
+
+* `--blas_threads`, `--faiss_threads` tune CPU parallelism.
+* `--fuzzy_workers` (`RapidFuzz`) uses native parallel `cdist`.
+* `--llm_concurrency`, `--rows_concurrency` control LLM and row‑level parallelism.
+* vLLM: `--llm_tp` tensor parallel = number of GPUs; quantization reduces VRAM.
+
+### 8.3 CUDA hygiene
+
+* `clear_cuda_memory` and **model round‑trip** to defragment caches between long phases.
+* Embedding loop backs off batch size upon OOM.
+
+---
+
+## 9) Reliability and failure modes
+
+* **Absent RapidFuzz**: pipeline skips fuzzy scores gracefully.
+* **Malformed LLM XML**: parsers degrade to single‑block capture; pipeline continues.
+* **Low recall** on one system: dual‑system search + per‑code aggregation mitigates; final LLM re‑rank can prefer the more appropriate system.
+* **Determinism**: set temperature low (default) and seed external components if absolute reproducibility is required. Exact tie‑breaking across HNSW/IVF can be non‑deterministic.
+* **Legacy fallback**: disable `--use_llm_clean/--use_llm_rerank` for pure ANN + RapidFuzz.
+
+---
+
+## 10) Security & privacy
+
+* No PHI is persisted; inputs are processed in‑memory.
+* Indices contain **public catalog strings** and codes only.
+* If using **hosted** LLMs, ensure data handling complies with org policies (vLLM is local by default).
+* SNOMED CT licensing considerations apply depending on deployment region.
+
+---
+
+## 11) Extensibility roadmap
+
+* **New vocabularies** (ICD‑10‑CM, LOINC) by adding catalogs, building indices, and mapping STY/TTY analogs.
+* **Additional signals** (e.g., code priors, usage frequency, site‑specific whitelists/blacklists).
+* **Caching** expansions per query canonicalization to reduce LLM calls.
+* **Better XML schema** (JSON is simpler) + schema validation.
+* **RAG over documentation** to improve expansion descriptions.
+
+---
+
+## 12) CLI: key parameters (cheat sheet)
+
+**Build**
+
+* `--model`: embedding model (default `google/embeddinggemma-300m`).
+* `--index`: `hnsw` | `ivfpq` | `flat` (+ HNSW/IVF/PQ knobs).
+* `--batch`: embedding batch size.
+
+**Query/Batch**
+
+* `--use_llm_clean`, `--use_llm_rerank` (true by default).
+* `--llm_backend`: `auto` | `vllm` | `llama-cpp`.
+* `--vllm_quantization`: quantization method (default `bitsandbytes`).
+* Weights: `--weights_desc/kw/direct/sty`.
+* Fuzzy: `--fuzzy_workers`, `--rerank=rapidfuzz|none`.
+* CPU: `--blas_threads`, `--faiss_threads`, `--cpu_pool`.
+
+---
+
+## 13) Deep dive: important functions/classes
+
+* **Embedding**
+
+  * `embed_texts(model, texts, batch_size, normalize)` — backoff loop handles CUDA OOM; always returns `float32`.
+* **Async wrappers** (`*_async`) with semaphores for fair scheduling.
+* **LLM**
+
+  * `AsyncLLMClient.generate_one` and `.generate_many` — vLLM streaming/awaitable support; llama.cpp guarded by a lock.
+  * `LLMClient.generate` — sync helper for single queries (simpler flow).
+* **Advanced pipeline**
+
+  * `advanced_match_one` / `advanced_match_one_async` — orchestrate expansion → retrieval → fuzzy → per‑code aggregation → optional LLM rerank.
+* **Aggregation helpers**
+
+  * `best_name_for_code` prefers TTY `PT` over synonyms or forms (`FN`, `SCD`, `SBD`).
+  * `precompute_sty_scores_map` computes vectorized max similarity for predicted STYs against the full STY vocab.
+
+---
+
+## 14) Q&A prep (likely questions + crisp answers)
+
+**Q1. Why combine embeddings, fuzzy, and LLMs?**
+No single signal dominates across all noise types. Embeddings capture semantics, fuzzy captures orthography/abbreviations, LLM expansion injects domain knowledge (brand names, lay terms). The weighted fusion improves recall and precision.
+
+**Q2. How do you keep RxNorm preferred for medications?**
+We use the input **entity type** to bias selection and, in the LLM rerank prompt, explicitly say “prefer RxNorm for meds; SNOMED otherwise”. The legacy path also picks the preferred system unless the alternative is strongly better.
+
+**Q3. What’s the purpose of per‑code aggregation?**
+Catalogs contain many rows per code (synonyms, forms). Aggregating stabilizes rankings by averaging across all variants and leveraging how many of a code’s strings surfaced in the top pool.
+
+**Q4. What are the main performance levers?**
+HNSW efSearch (latency/recall), IVF‑PQ params (footprint/recall), embedding batch size, FAISS/BLAS threads, RapidFuzz workers, and LLM concurrency. vLLM prefix caching yields large savings for repeated prompts.
+
+**Q5. How do you avoid LLM hallucination?**
+LLM output only **proposes** candidates and optionally re‑orders the **already valid** codes. Codes always originate from FAISS catalogs; the LLM never fabricates unseen codes.
+
+**Q6. Determinism and reproducibility?**
+Set temperature low (0.0–0.1), fix seeds where possible, and pin index params. HNSW/IVF have minor non‑determinism; within acceptable tolerance for ranking tasks.
+
+**Q7. Failure when RapidFuzz is missing?**
+We skip fuzzy scoring; the pipeline still runs with dense retrieval and STY signals.
+
+**Q8. Why use STY embeddings instead of exact matches?**
+LLM predicts **likely** STYs, not certainties. Embedding similarity soft‑matches related STYs (e.g., “Clinical Drug” vs “Pharmacologic Substance”), improving robustness.
+
+**Q9. How big should the fuzzy/top pools be?**
+Defaults (`fuzzy_pool=500`, `top_pool_after_fuzzy=250`) balance recall and cost. Increase for noisier inputs or very large catalogs.
+
+**Q10. Can we add ICD‑10‑CM or LOINC?**
+Yes—add catalogs, build indices, and (optionally) extend STY inventory. The pipeline is vocabulary‑agnostic.
+
+**Q11. What are the GPU requirements?**
+Any NVIDIA GPU works. Per‑GPU VRAM ≥ 22 GB allows larger models; otherwise the auto‑selector uses Qwen 4B HF + quant. The ANN/embedding stage is light (few hundred MBs) for common ST embedding models.
+
+**Q12. How are inputs/outputs structured for batch?**
+Input table must contain `"Input Entity Description"` and `"Entity Type"`. Output includes top‑1 columns by default, plus `include_topk` to expand to `k` alternatives.
+
+**Q13. How do you handle nullcontext error?**
+`from contextlib import nullcontext` is imported and used as a fallback when `threadpool_limits` is absent. (Fixed in code.)
+
+**Q14. What does the boost `sqrt(log10(%))` achieve?**
+Dampened lift for codes with many strong rows in the pool without letting row‑rich codes dominate purely by volume.
+
+**Q15. Where does latency go?**
+Typically: LLM expansion (if enabled) ≫ fuzzy re‑rank ≈ ANN search ≫ aggregation. Tuning anchors and concurrency gives the biggest wins.
+
+---
+
+## 15) Operational guidance
+
+* Prefer building indices offline; commit the whole `out_dir` as a versioned artifact (immutable).
+* Start with **legacy path** in production; enable LLM expansion for tricky cohorts and A/B compare.
+* Log request IDs around LLM calls; capture prompt + hashes, not PHI.
+* Export top‑k with reasons for human review in early rollouts.
+
+---
+
+## 16) Appendix
+
+### 16.1 Defaults (selected)
+
+* Weights: `desc=.30, kw=.40, direct=.20, sty=.10`
+* Pools: `semantic_top_desc=500, semantic_top_direct=500, semantic_top_kw_each=100, fuzzy_pool=500, top_pool_after_fuzzy=250`
+* LLM: `max_new_tokens=512, temperature=0.1, top_p=0.9`
+
+### 16.2 Environment
+
+* `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` (helps fragmentation)
+* BLAS pool caps via `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, `BLIS_NUM_THREADS`, `NUMEXPR_NUM_THREADS` (set by code if `--blas_threads` is used).
+
+### 16.3 Important columns
+
+* **TTY** (term type): `PT` (preferred term), `FN` (fully specified name), `SCD/SBD` (RxNorm clinical/brand dose forms), etc.
+* **STY** (semantic type): curated types used to bias ranking; embedded to enable soft similarity.
+
+### 16.4 Third‑party deps
+
+* FAISS, Sentence-Transformers, PyTorch, RapidFuzz, vLLM/llama.cpp, HuggingFace Hub utilities, pandas, numpy, tqdm.
+
+---
+
+**End of document.**
+
+
+flow mermaid codes:
+%% 4) Batch flow (batch command) – Async rows + shared LLM/ANN
+flowchart TD
+  A[run_batch] --> B[load_bundle + set hnsw efSearch]
+  A --> C[configure_cpu_threading + threadpool_limits]
+  A --> D[read_input_table - in_file]
+  A --> E{use_llm_*?}
+
+  E -- yes --> F[Init AsyncLLMClient - concurrency, TP, quant]
+  E -- no --> F0[No LLM path]
+
+  %% Orchestration
+  subgraph ORCH[Async Orchestrator]
+    direction TB
+    G[ThreadPoolExecutor size = cpu_pool] --> H[asyncio Queue of row indices]
+    H --> I[rows_concurrency workers]
+  end
+
+  F --> ORCH
+  F0 --> ORCH
+
+  %% Worker
+  subgraph W[process_row - i]
+    direction TB
+    W1[Read: Input Entity Description, Entity Type]
+    W2{use_llm_*?}
+    W2 -- yes --> W3[advanced_match_one_async - LLM expand → ANN → fuzzy → per-code → optional LLM rerank]
+    W2 -- no --> W4[Legacy ANN → choose_system_hits]
+    W3 --> W5[Write top1 + optional topk cols into DF]
+    W4 --> W5
+  end
+
+  I --> W1
+  W5 --> J[write_output_table - out_file]
+
+%% 2) Build flow (build command)
+flowchart TD
+  A[build_indices] --> B[Load SNOMED parquet]
+  A --> C[Load RxNorm parquet]
+  B --> D[prepare_catalog SNOMED]
+  C --> E[prepare_catalog RxNorm]
+  D --> F[Init embed model]
+  E --> F
+  F --> G[determine dim + device]
+
+  %% Index factory
+  G --> H{index type?}
+  H -->|hnsw| H1[faiss.IndexHNSWFlat d, M set efConstruction]
+  H -->|ivfpq| H2[faiss.IndexIVFPQ train_ivfpq_if_needed]
+  H -->|flat| H3[faiss.IndexFlatIP]
+  H1 --> I1[wrap with IndexIDMap2]
+  H2 --> I1
+  H3 --> I1
+
+  %% SNOMED build
+  I1 --> J1[Loop SNOMED rows in batches embed_texts -> add_with_ids]
+  J1 --> K1[Set hnsw efSearch if hnsw]
+  K1 --> L1[write_index snomed.index.faiss]
+  J1 --> M1[memmap write snomed_vectors.f32]
+
+  %% Barrier + RX build
+  L1 --> N[clear_cuda_memory + model_roundtrip_cpu_gpu]
+  M1 --> N
+  N --> I2[Clone index factory for RxNorm]
+  I2 --> J2[Loop RxNorm rows in batches embed_texts -> add_with_ids]
+  J2 --> K2[Set hnsw efSearch if hnsw]
+  K2 --> L2[write_index rxnorm.index.faiss]
+  J2 --> M2[memmap write rxnorm_vectors.f32]
+
+  %% STY embeddings + meta
+  L2 --> P[Build STY vocab as union of STY from both catalogs]
+  M2 --> P
+  P --> Q[embed_texts STY list -> sty_embeddings.npy]
+  Q --> R[write sty_vocab.json]
+  R --> S[write meta.json model, dim, files, index params]
+
+%% 1) High-level system overview
+flowchart TB
+  %% Entrypoint
+  A["argparse CLI (main -> subparsers)"] -->|build| B(Build Indices)
+  A -->|query| C(Query Single)
+  A -->|batch| D(Batch Process)
+
+  %% Storage
+  subgraph S["On-disk Artifacts"]
+    S1[snomed_catalog.parquet]
+    S2[rxnorm_catalog.parquet]
+    S3[snomed.index.faiss]
+    S4[rxnorm.index.faiss]
+    S5[snomed_vectors_f32_rx_memmap]
+    S6[rxnorm_vectors_f32_rx_memmap]
+    S7[sty_vocab.json]
+    S8[sty_embeddings.npy]
+    S9[meta.json]
+  end
+
+  B -- write --> S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9
+
+  %% Runtime bundle
+  subgraph L["Runtime Bundle (load_bundle)"]
+    L1[SentenceTransformer model]
+    L2[FAISS snomed index]
+    L3[FAISS rxnorm index]
+    L4[snomed catalog DF]
+    L5[rxnorm catalog DF]
+    L6[STY vocab + embeddings]
+    L7[memmap views of vectors]
+  end
+
+  C -- load --> L
+  D -- load --> L
+
+  %% LLM control plane
+  subgraph X["LLM Control Plane"]
+    X1[pick_llm_backend_and_model]
+    X2{Backend?}
+    X3[vLLM engine: quant, TP, concurrency]
+    X4[llama.cpp engine: n_threads, n_ctx]
+  end
+
+  C -- if use_llm_* --> X1 --> X2
+  D -- if use_llm_* --> X1
+  X2 -->|vllm| X3
+  X2 -->|llama-cpp| X4
+
+  %% Outputs
+  C --> O1[stdout: Top-k codes]
+  D --> O2[out_file: csv/xlsx with columns]
+
+%% 3) Query flow (query command) – Advanced LLM + ANN + Fuzzy
+flowchart TB
+  A[run_query] --> B[load_bundle - index_dir]
+  A --> C[configure_cpu_threading + threadpool_limits - nullcontext when unused]
+  A --> D{use_llm_clean or use_llm_rerank?}
+
+  D -- no --> LEG[Legacy Path]
+  D -- yes --> E[Init LLMClient - vLLM or llama-cpp]
+
+  %% Expansion
+  E --> F[llm_expand_query - EXPAND_* prompts]
+  F --> G[Candidates - alternate_keywords,\ndescription, possible_stys]
+  G --> H[build_expanded_summary]
+
+  %% Embedding signals
+  H --> I[embed_texts - query -> q_vec]
+  G --> J[embed_texts - descriptions per cand]
+  G --> K[embed_texts - alt_keywords batched]
+  G --> L[precompute_sty_scores_map - pred_stys, STY vocab/emb]
+
+  %% ANN searches on both systems
+  subgraph S[Semantic Searches]
+    direction LR
+    I --> S1[FAISS search top_direct per system]
+    J --> S2[FAISS search top_desc per system]
+    K --> S3[FAISS batch search top_kw per system]
+  end
+
+  S1 --> M[Aggregate row_scores by - system,row_id]
+  S2 --> M
+  S3 --> M
+  L --> M
+
+  M --> N[Compute composite score per row w_desc, w_kw, w_direct, w_sty]
+  N --> O[Take top fuzzy_pool by composite]
+
+  %% Fuzzy
+  O --> P{HAVE_RAPIDFUZZ?}
+  P -- yes --> Q[rapidfuzz two-stage max - query + KWs, STR]
+  P -- no --> R[skip]
+  Q --> S0[Re-sort by fuzzy desc]
+  R --> S0
+  S0 --> T[Take top_pool_after_fuzzy]
+
+  %% Aggregate per code
+  T --> U[Group by - System, CODE]
+  U --> V[Recompute composite per member row using memmapped vectors - q_vec, best desc, all KWs, STY map]
+  V --> W[Compute per-code: avg_all, avg_500, pct_in_top500, final = avg_all * avg_500 * sqrt log10 pct]
+  W --> X[Pick representative term per code - PT/FN/SCD/SBD preference]
+  X --> Y{use_llm_rerank?}
+  Y -- yes --> Z[llm_rerank_codes - RERANK_* prompts -> ordered codes]
+  Y -- no --> Z0[Keep top final by score]
+
+  Z --> AA[Emit top-k rows]
+  Z0 --> AA
+
+  %% Legacy branch
+  LEG --> L1[embed_texts - query]
+  L1 --> L2[FAISS search SNOMED + RxNorm]
+  L2 --> L3[build_hits_simple - optional RapidFuzz]
+  L3 --> L4[choose_system_hits - preferred vs alt]
+  L4 --> AA
+  AA --> OUT[stdout: Top-k printed]
+
+
+Future works info:
+for future works we can add things mentioned and things like adding more random connections in hnsw to make the world more smaller (small world thing states even ~1% random connections can make the world whole lot smaller, and adding some exploration bias to farther nodes from current ones, would lead more overall exploration possibilities) (take redernece from watts and strogatz, collective dynamics of small world networks)
+also add things already mentioned, like frequency, caching, further optimisations possibilities and all.
+one more thing i was thinking about was that, we have added llm for query expansion and re-ranking but we can also do things like llm finetuning on this data based on RL (GRPO), generate synthetic qa pairs and ask llm to reason about the correct thing, give reward to correct things and penalise wrong ones, also in case performance is too poor for cold start rl, while generating synthetic qa pairs we can also geenrate a sample reasoning+response pair for the sample that why for query a answer should be b, and then sft the llm on that sample, and then do RL + rag applications for better equipped answers + agentic exploration.
+this was all llms from query side, we can also add llms from build side, as in while building we can extract rich descriptions and alt keywords for each unique code, and while querying, instead of matching against very unclean and mixed info/std descriptions, we can match against very rich descriptions and larger list of possible keywords. this will be expensive but one time, there are ~1.4 million entries and ~600K unique codes, supposing ~10 codes per llm call, then we would need ~60K llm api calls but that would be a onetime load, which has the potential on significantly improving accuracy.
+you may also add any other idea if you have.
+we can add other similarity matching systems (lexical) like bm25. we can also rely more on clustering related techniques/tree-like division of the dataset, in terms of sty, keywords, etc.
+
+additional context (provided by chatgpt, with whom i had created everything till now in collaboration with, which thought that this info will be crucial for you to create the website. chatgpt had all context about the ps, the explanations, building the solution, etc., on everything it had info about, so it is providing you with context which it thinks maybe relevant):
+# Supplemental spec for the website generator
+
+## 0) TL;DR (what to build)
+
+Create a public, static site that explains and demos **Clinical Concept Harmonizer** — a hybrid engine mapping messy inputs to **RxNorm** (meds) and **SNOMED CT** (diagnoses/procedures/labs) using:
+
+* Semantic search (embeddings + FAISS)
+* Fuzzy matching (RapidFuzz) with a two-stage pass
+* Optional LLM assist (query expansion + final rerank)
+* Per-code aggregation with stability boosts
+  No PHI is persisted; all inputs are processed in-memory.
+
+## 1) Mini-glossary (use these exact wordings for “?” tooltips)
+
+* **Anchor**: a string we compare candidates against. We use multiple anchors: `{normalized user query} ∪ top alternate keywords`. Final fuzzy score = **max** across anchors.
+* **ratio (prefilter)**: RapidFuzz’s fast edit similarity (0–100). Used to shortlist.
+* **token_set_ratio (refine)**: set-based similarity (order/duplicates robust). Used on the shortlist only.
+* **STY (Semantic Type)**: clinical category (e.g., Disease/Syndrome, Pharmacologic Substance). We compute `max cos(pred_STYs, sty_vocab)` to score compatibility.
+* **cos→[0,1]**: normalize cosine: `cos_to_01(x)=clip((x+1)/2, 0, 1)` so all signals share the same 0–1 scale.
+* **snomed_vectors.f32 / rxnorm_vectors.f32**: memory-mapped float32 matrices with **normalized** embeddings; row-aligned to `row_id`. Loaded for fast vector ops at runtime.
+* **HNSW efSearch**: “how exhaustively to search” in the HNSW graph; higher = better recall, slower.
+* **Thread knobs**: `--blas_threads` caps NumPy/BLAS pools; `--faiss_threads` sets FAISS OpenMP threads; `--fuzzy_workers` sets RapidFuzz parallelism.
+* **CUDA alloc (`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`)**: lets PyTorch grow memory segments to reduce fragmentation & OOMs.
+
+## 2) Required sections (single page with anchored nav)
+
+* **Hero**: one-line value prop + CTAs “See Pipeline”, “Try Demo”, “Download Repo”.
+* **Problem → Solution**: use hackathon examples (Hb/HGB, Paracetamol/Acetaminophen, etc.). Short by default; “?” popovers for details.
+* **Architecture (Mermaid)**: render repo flow files; if none exist, use this default:
+
+```mermaid
+flowchart LR
+  A[Raw input] --> B[LLM expansion (alt keywords, brief desc, STYs)]
+  B --> C[Semantic search over SNOMED & RxNorm (FAISS)]
+  C --> D[Weighted mix: desc + kw + direct + STY]
+  D --> E[Two-stage fuzzy: ratio prefilter -> token_set_ratio refine]
+  E --> F[Per-code aggregation & boost]
+  F --> G{Optional LLM rerank}
+  G --> H[Top-k codes (system | code | STR | STY | TTY)]
+```
+
+* **How scoring works**: sliders for 4 signals (defaults: 0.30/0.40/0.20/0.10) + formula chip.
+* **Demo (client-side only)**: textbox + entity-type dropdown; run a **mock** scoring over a tiny hardcoded JSON; show ranked cards (System, Code, STR, STY, TTY) + “Why this?” popover explaining anchors + fuzzy stages.
+* **Performance & knobs**: cards for `efSearch`, `--blas_threads`, `--faiss_threads`, `--fuzzy_workers` (one-line description + “learn more” tooltip).
+* **Data safety**: “No PHI persisted; inputs processed in-memory.”
+* **Future work**: incremental indexing, domain adapters, confidence intervals, site whitelists/blacklists, code priors, usage frequency, caching expansions.
+* **Credits & licensing**: FAISS, SentenceTransformers, RapidFuzz, vLLM/llama-cpp, SNOMED/RxNorm notes.
+
+## 3) UX rules (must-haves)
+
+* Monochrome (black/white/gray) like OpenAI/Uber; large type, spacious layout, subtle motion.
+* Progressive disclosure: every dense concept has a `?` (hover tooltip; click popover on mobile).
+* Auto-render all `.mmd`/`.mermaid` under `/flows` or `/diagrams`; fall back to default diagram above.
+* Syntax-highlight short code; compact tables for sample I/O.
+* Accessibility: visible focus, ≥4.5:1 contrast, aria-labels on icons.
+
+## 4) Tech constraints (GitHub Pages)
+
+* Static only; all logic runs client-side.
+* Allowed CDNs: Mermaid, Prism.js (or highlight.js), Tippy.js (or tiny custom tooltip), optional Tailwind (CDN).
+* Ship structure:
+
+```
+/
+├─ index.html
+├─ /assets/styles.css
+├─ /assets/app.js
+├─ /data/samples.json
+├─ /diagrams/*.mmd
+└─ /img/*
+```
+
+* Mermaid init (once, before rendering):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, securityLevel: 'loose', theme: 'neutral' });</script>
+```
+
+* Deploy: output to `docs/` (or repo root) for GitHub Pages; add a short “How to deploy” note in the footer.
+
+## 5) Content to extract from the repo
+
+* `README.md` & `Arch.md`: copy blocks for Problem, Approach, Method, Knobs, Troubleshooting.
+* Flow files (Mermaid): auto-embed as diagrams.
+* Sample I/O from the problem statement: drive the demo table + `/data/samples.json`.
+* Short explainers must cover: anchors & two-stage fuzzy (ratio → token_set_ratio); STY compatibility (`max cos(pred_STYs, sty_vocab)`); per-code aggregation `final = mean(all) × mean(top-pool) × sqrt(log10(% in pool))`; cosine normalization to [0,1]; meanings of `efSearch`, thread knobs, CUDA expandable segments; purpose of `*.f32` mem-mapped vectors.
+
+## 6) Demo data (use if none provided)
+
+Create `/data/samples.json`:
+
+```json
+{
+  "examples": [
+    { "text": "Paracetamol 500 mg", "entity_type": "Medication",
+      "candidates": [
+        { "system": "RXNORM", "code": "198440", "str": "Acetaminophen 500 MG Oral Tablet", "sty": "Pharmacologic Substance", "tty": "SCD" },
+        { "system": "RXNORM", "code": "161", "str": "Acetaminophen", "sty": "Pharmacologic Substance", "tty": "IN" }
+      ],
+      "anchors": ["paracetamol 500 mg", "acetaminophen 500 mg", "tylenol 500"]
+    },
+    { "text": "Chest xr", "entity_type": "Procedure",
+      "candidates": [
+        { "system": "SNOMEDCT_US", "code": "399208008", "str": "Plain X-ray of chest", "sty": "Diagnostic Procedure", "tty": "PT" }
+      ],
+      "anchors": ["chest xr", "chest x-ray", "cxr", "chest radiograph"]
+    }
+  ]
+}
+```
+
+The client-side demo **simulates** scoring: show anchors; show a faux two-stage fuzzy run (stage-1 keeps N, stage-2 ranks); display top-k with badges; “Why this?” popover: “max token_set_ratio across anchors after ratio prefilter”.
+
+## 7) Copy deck (ready-to-use snippets)
+
+* **Value prop**: “Normalize messy clinical inputs to standardized **RxNorm** and **SNOMED CT**—fast, robust, and explainable.”
+* **Fuzzy explainer**: “We first run a fast **ratio** prefilter per anchor to shrink the pool, then refine with **token_set_ratio**; final score = **max** across anchors.”
+* **STY explainer**: “We compare predicted semantic types against a pre-embedded STY vocabulary: **max cosine**; higher means the candidate fits the intended clinical category.”
+* **Safety**: “No PHI is stored; inputs are processed in memory only.”
+
+## 8) Visual component specs
+
+* **Weight sliders**: four sliders (desc/kw/direct/sty), defaults 0.30/0.40/0.20/0.10; display current sum.
+* **Result card**: System (pill), Code, STR, STY (chip), TTY (chip) + “?” popover.
+* **Knob cards**:
+
+  * efSearch — “HNSW search breadth. ↑ = better recall, slower.”
+  * BLAS threads — “Max CPU threads for NumPy/BLAS math.”
+  * FAISS threads — “Parallelism for ANN search.”
+  * Fuzzy workers — “RapidFuzz parallel batch size.”
+* **Theme**: white bg, black text, gray accents; 12/16/24 spacing; rounded-2xl cards; micro-hover shadow.
+
+## 9) Implementation checklist
+
+* Page is readable with JS disabled (headings + static text; diagrams show “Load to view” placeholder).
+* On load, Mermaid renders all `.mmd` under `/diagrams`.
+* Demo works **offline** using `/data/samples.json`.
+* Every “?” explains: anchors; ratio vs token_set_ratio; STY map; cosine normalization; efSearch; threads; CUDA expandable segments.
+* Lighthouse ≥ 90 for Performance & Accessibility.
+* Output suitable for GitHub Pages (`docs/` or root).
+* No external network calls beyond whitelisted CDNs.
+* Footer includes “How to run / deploy”.
+
+## 10) Pitfalls to avoid
+
+* Don’t invent medical codes; use provided examples.
+* Don’t present the demo as live mapping; label it **simulation** with sample data.
+* Keep the palette monochrome.
+* Mirror repo diagrams/formulas; don’t rely only on LLM prose.
+
+## 11) Optional nice-to-haves
+
+* Toggle to show **LLM-off** vs **LLM-on** narratives.
+* Mini CLI section with copy-buttons for `build`, `batch`, `query`.
+* Tiny “Metrics” strip: catalog sizes, index type, default `efSearch`.
+
+
+now go and create a nicely designed beautiful website.

@@ -1,0 +1,63 @@
+%% 3) Query flow (query command) – Advanced LLM + ANN + Fuzzy
+flowchart TB
+  A[run_query] --> B[load_bundle - index_dir]
+  A --> C[configure_cpu_threading + threadpool_limits - nullcontext when unused]
+  A --> D{use_llm_clean or use_llm_rerank?}
+
+  D -- no --> LEG[Legacy Path]
+  D -- yes --> E[Init LLMClient - vLLM or llama-cpp]
+
+  %% Expansion
+  E --> F[llm_expand_query - EXPAND_* prompts]
+  F --> G[Candidates - alternate_keywords,\ndescription, possible_stys]
+  G --> H[build_expanded_summary]
+
+  %% Embedding signals
+  H --> I[embed_texts - query -> q_vec]
+  G --> J[embed_texts - descriptions per cand]
+  G --> K[embed_texts - alt_keywords batched]
+  G --> L[precompute_sty_scores_map - pred_stys, STY vocab/emb]
+
+  %% ANN searches on both systems
+  subgraph S[Semantic Searches]
+    direction LR
+    I --> S1[FAISS search top_direct per system]
+    J --> S2[FAISS search top_desc per system]
+    K --> S3[FAISS batch search top_kw per system]
+  end
+
+  S1 --> M[Aggregate row_scores by - system,row_id]
+  S2 --> M
+  S3 --> M
+  L --> M
+
+  M --> N[Compute composite score per row w_desc, w_kw, w_direct, w_sty]
+  N --> O[Take top fuzzy_pool by composite]
+
+  %% Fuzzy
+  O --> P{HAVE_RAPIDFUZZ?}
+  P -- yes --> Q[rapidfuzz two-stage max - query + KWs, STR]
+  P -- no --> R[skip]
+  Q --> S0[Re-sort by fuzzy desc]
+  R --> S0
+  S0 --> T[Take top_pool_after_fuzzy]
+
+  %% Aggregate per code
+  T --> U[Group by - System, CODE]
+  U --> V[Recompute composite per member row using memmapped vectors - q_vec, best desc, all KWs, STY map]
+  V --> W[Compute per-code: avg_all, avg_500, pct_in_top500, final = avg_all * avg_500 * sqrt log10 pct]
+  W --> X[Pick representative term per code - PT/FN/SCD/SBD preference]
+  X --> Y{use_llm_rerank?}
+  Y -- yes --> Z[llm_rerank_codes - RERANK_* prompts -> ordered codes]
+  Y -- no --> Z0[Keep top final by score]
+
+  Z --> AA[Emit top-k rows]
+  Z0 --> AA
+
+  %% Legacy branch
+  LEG --> L1[embed_texts - query]
+  L1 --> L2[FAISS search SNOMED + RxNorm]
+  L2 --> L3[build_hits_simple - optional RapidFuzz]
+  L3 --> L4[choose_system_hits - preferred vs alt]
+  L4 --> AA
+  AA --> OUT[stdout: Top-k printed]

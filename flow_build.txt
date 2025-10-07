@@ -1,0 +1,40 @@
+%% 2) Build flow (build command)
+flowchart TD
+  A[build_indices] --> B[Load SNOMED parquet]
+  A --> C[Load RxNorm parquet]
+  B --> D[prepare_catalog SNOMED]
+  C --> E[prepare_catalog RxNorm]
+  D --> F[Init embed model]
+  E --> F
+  F --> G[determine dim + device]
+
+  %% Index factory
+  G --> H{index type?}
+  H -->|hnsw| H1[faiss.IndexHNSWFlat d, M set efConstruction]
+  H -->|ivfpq| H2[faiss.IndexIVFPQ train_ivfpq_if_needed]
+  H -->|flat| H3[faiss.IndexFlatIP]
+  H1 --> I1[wrap with IndexIDMap2]
+  H2 --> I1
+  H3 --> I1
+
+  %% SNOMED build
+  I1 --> J1[Loop SNOMED rows in batches embed_texts -> add_with_ids]
+  J1 --> K1[Set hnsw efSearch if hnsw]
+  K1 --> L1[write_index snomed.index.faiss]
+  J1 --> M1[memmap write snomed_vectors.f32]
+
+  %% Barrier + RX build
+  L1 --> N[clear_cuda_memory + model_roundtrip_cpu_gpu]
+  M1 --> N
+  N --> I2[Clone index factory for RxNorm]
+  I2 --> J2[Loop RxNorm rows in batches embed_texts -> add_with_ids]
+  J2 --> K2[Set hnsw efSearch if hnsw]
+  K2 --> L2[write_index rxnorm.index.faiss]
+  J2 --> M2[memmap write rxnorm_vectors.f32]
+
+  %% STY embeddings + meta
+  L2 --> P[Build STY vocab as union of STY from both catalogs]
+  M2 --> P
+  P --> Q[embed_texts STY list -> sty_embeddings.npy]
+  Q --> R[write sty_vocab.json]
+  R --> S[write meta.json model, dim, files, index params]
