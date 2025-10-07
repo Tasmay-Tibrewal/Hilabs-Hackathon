@@ -6,7 +6,7 @@ export function Slide9({ onDetail }: { onDetail: (id: string) => void }) {
   return (
     <div className="max-w-6xl w-full">
       <h2 className="text-6xl font-bold mb-4">STY Compatibility Innovation</h2>
-      <p className="text-xl text-gray-700 mb-6">Semantic Type (STY) provides a type-safety prior. We predict plausible STYs from expansion and match against candidate STYs quickly using pre-embedded vocab (no per-row embedding at query time). With 4 signals × 2 systems × top-500 each, we handle up to <strong>~4,000</strong> candidates efficiently.</p>
+      <p className="text-xl text-gray-700 mb-6">Semantic Type (STY) provides a type-safety prior. We predict plausible STYs from expansion and match against candidate STYs quickly using pre-embedded vocab (no per-row embedding at query time). With 4 signals × 2 systems × top-500 each, we have ~4,000 base candidates; allowing up to 5 candidates per query yields up to <strong>~20,000</strong> comparisons handled efficiently.</p>
       
       <div className="bg-purple-50 p-8 rounded-2xl border-4 border-purple-300 mb-8">
         <h3 className="text-3xl font-bold mb-6">What is STY?</h3>

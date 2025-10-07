@@ -737,14 +737,24 @@ Output the XML now.`}</pre>
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
           <h4 className="text-3xl font-bold mb-4">Index Build (Offline)</h4>
           <MermaidDiagram chart={`flowchart LR\n  LoadParquet --> NormalizeSchema\n  NormalizeSchema --> EmbedSTR\n  EmbedSTR --> HNSWIndex\n  EmbedSTR --> VectorsF32\n  NormalizeSchema --> STYVocab\n  STYVocab --> EmbedSTY\n  HNSWIndex --> MetaJSON\n  VectorsF32 --> MetaJSON\n  EmbedSTY --> MetaJSON\n          `} />
+          <div className="mt-4 text-gray-700 text-lg">
+            Offline build produces three artifacts: FAISS indices (fast ANN), memmapped exact vectors (for vectorized math and aggregation), and pre-embedded STY vocabulary (for O(1) type compatibility).
+            Schema normalization ensures consistent <span className="font-mono">row_id</span> across all artifacts for zero-copy joins.
+          </div>
         </div>
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
           <h4 className="text-3xl font-bold mb-4">Query (Online)</h4>
           <MermaidDiagram chart={`flowchart TD\n  QueryInput --> ExpansionXML\n  ExpansionXML --> Direct\n  ExpansionXML --> Description\n  ExpansionXML --> Keywords\n  ExpansionXML --> STYMatch\n  Direct --> MergeScore\n  Description --> MergeScore\n  Keywords --> MergeScore\n  STYMatch --> MergeScore\n  MergeScore --> Fuzzy\n  Fuzzy --> AggregateCodes\n  AggregateCodes --> RerankLLM\n  RerankLLM --> TopK\n          `} />
+          <div className="mt-4 text-gray-700 text-lg">
+            Online path expands inputs (synonyms, brands, abbreviations, brief description, STY hints), performs four parallel semantic searches (direct, description, keywords) across both vocabularies, blends signals into a composite score, prunes and refines via two-stage fuzzy matching, aggregates per-code for stability, and optionally applies a constrained LLM reranker to select the final Top‑K.
+          </div>
         </div>
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
           <h4 className="text-3xl font-bold mb-4">Concurrency Model</h4>
           <MermaidDiagram chart={`sequenceDiagram\n  participant UI as UI\n  participant JS as AsyncLoop\n  participant EMB as Embed\n  participant FAI as FAISS\n  participant FUZ as RapidFuzz\n  UI->>JS: Submit query\n  JS->>EMB: Semaphore(embed)\n  EMB-->>JS: vectors\n  JS->>FAI: Parallel searches\n  FAI-->>JS: candidates\n  JS->>FUZ: Two-stage rerank\n  FUZ-->>JS: fuzzy scores\n  JS->>UI: results\n          `} />
+          <div className="mt-4 text-gray-700 text-lg">
+            A two-level concurrency scheme: pipeline-level row parallelism and component-level semaphores. GPU-bound stages (embedding/LLM) sit behind semaphores; CPU-bound stages (FAISS, fuzzy) tune threads and use <span className="font-mono">to_thread</span> pools. This keeps VRAM stable while maximizing throughput.
+          </div>
         </div>
       </div>
     )
@@ -911,6 +921,15 @@ async def embed_texts_async(...):
           <ul className="text-lg text-gray-700 space-y-2">
             <li>• Post-build augmentation pass</li>
             <li>• A/B recall vs latency evaluation</li>
+            <li>• Tune percent of long-range edges (0.5–2%)</li>
+            <li>• Guard with memory budget and build time caps</li>
+          </ul>
+        </div>
+        <div className="bg-gray-50 p-6 rounded-xl">
+          <h4 className="text-3xl font-bold mb-4">Risks & Metrics</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Risk: over-densifying graph → memory bloat</li>
+            <li>• Track: Recall@K vs efSearch; index size; build time</li>
           </ul>
         </div>
       </div>
@@ -925,10 +944,19 @@ async def embed_texts_async(...):
           <div className="bg-white p-6 rounded-lg">Generate synthetic QA pairs; reinforce code-selection accuracy with GRPO; distill into 4B model.</div>
         </div>
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
+          <h4 className="text-3xl font-bold mb-4">Training Plan</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Generate synthetic pairs from gold mappings</li>
+            <li>• Reward function: Top‑K inclusion + system preference</li>
+            <li>• Distill into 4B GGUF for CPU fallback</li>
+          </ul>
+        </div>
+        <div className="bg-gray-50 p-6 rounded-xl">
           <h4 className="text-3xl font-bold mb-4">Metrics</h4>
           <ul className="text-lg text-gray-700 space-y-2">
-            <li>• Top-1/Top-3 accuracy</li>
-            <li>• Hallucination rate (should be 0 by design)</li>
+            <li>• Top‑1/Top‑3 accuracy uplift vs baseline</li>
+            <li>• Runtime cost (tokens/query) and throughput</li>
+            <li>• Hallucination rate (expected 0 by constraints)</li>
           </ul>
         </div>
       </div>
@@ -944,7 +972,15 @@ async def embed_texts_async(...):
         </div>
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
           <h4 className="text-3xl font-bold mb-4">Scale</h4>
-          <div className="text-gray-700">~60K calls for top-used codes; amortized offline cost.</div>
+          <div className="text-gray-700">~60K calls for top-used codes; amortized offline cost. Deduplicate by CUI; batch with caching to minimize calls.</div>
+        </div>
+        <div className="bg-gray-50 p-6 rounded-xl">
+          <h4 className="text-3xl font-bold mb-4">Design</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Store short summaries in a new column</li>
+            <li>• Embed once; reuse in desc signal + STY hints</li>
+            <li>• Flag provenance for auditing</li>
+          </ul>
         </div>
       </div>
     )
@@ -962,6 +998,14 @@ async def embed_texts_async(...):
           <ul className="text-lg text-gray-700 space-y-2">
             <li>• Maintain light BM25 index</li>
             <li>• Merge into candidate pool with weight</li>
+            <li>• Downweight for generic/common terms</li>
+          </ul>
+        </div>
+        <div className="bg-gray-50 p-6 rounded-xl">
+          <h4 className="text-3xl font-bold mb-4">Evaluation</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Lift on rare-token queries (numbers/units)</li>
+            <li>• Latency overhead vs dense-only</li>
           </ul>
         </div>
       </div>
@@ -978,8 +1022,16 @@ async def embed_texts_async(...):
         <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
           <h4 className="text-3xl font-bold mb-4">Approach</h4>
           <ul className="text-lg text-gray-700 space-y-2">
-            <li>• STY -&gt; coarse buckets</li>
+            <li>• STY → coarse buckets</li>
             <li>• KMeans/Annoy within buckets</li>
+            <li>• Router picks top clusters per query</li>
+          </ul>
+        </div>
+        <div className="bg-gray-50 p-6 rounded-xl">
+          <h4 className="text-3xl font-bold mb-4">Benefits</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Smaller candidate sets per query</li>
+            <li>• Lower latency at similar recall</li>
           </ul>
         </div>
       </div>
@@ -1012,6 +1064,13 @@ Return STRICT XML: a sequence of <choice> blocks; each contains:
   <code>THE EXACT CODE STRING</code>
   <reasoning>concise justification</reasoning>
 Do not include other tags, no markdown, no extra text.`}</pre>
+        </div>
+        <div className="bg-white p-6 rounded-xl border-4 border-gray-200">
+          <h4 className="text-3xl font-bold mb-4">Cache Invalidation</h4>
+          <ul className="text-lg text-gray-700 space-y-2">
+            <li>• Version results by model/index build id</li>
+            <li>• TTL for LLM expansions; LRU for Top‑K</li>
+          </ul>
         </div>
         <div className="bg-gray-50 p-6 rounded-xl">
           <h4 className="text-3xl font-bold mb-4">User Prompt (Rerank)</h4>

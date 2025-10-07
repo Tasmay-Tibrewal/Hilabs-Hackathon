@@ -7,13 +7,13 @@ export function Slide17({ onDetail }: { onDetail: (id: string) => void }) {
       
       <div className="grid grid-cols-2 gap-6">
         {[
-          { icon: "🔬", title: "Enhanced HNSW", desc: "Small-world topology (~1% random connections)", ref: "Watts & Strogatz", id: "future-hnsw" },
-          { icon: "🤖", title: "LLM Fine-tuning", desc: "GRPO RL on synthetic QA pairs", ref: "Domain adaptation", id: "future-rl" },
-          { icon: "📝", title: "Rich Descriptions", desc: "LLM-generated for each code at build", ref: "~60K API calls", id: "future-desc" },
-          { icon: "🔍", title: "BM25 Integration", desc: "Lexical search for rare terms", ref: "Hybrid dense+sparse", id: "future-bm25" },
-          { icon: "🌳", title: "Hierarchical Clustering", desc: "Pre-cluster by STY/keywords", ref: "Reduced search space", id: "future-cluster" },
-          { icon: "💾", title: "Response Caching", desc: "Cache expansions and results", ref: "10x speedup", id: "future-cache" },
-          { icon: "🧠", title: "UMLS Integration", desc: "Leverage CUIs for cross-vocab linking", ref: "Roadmap: normalization APIs", id: "future-umls" },
+          { icon: "🔬", title: "Enhanced HNSW", desc: "Inject ~1% long-range edges to shrink graph diameter and lift recall at fixed efSearch, with strict memory and build-time guards.", ref: "Watts–Strogatz small-world", id: "future-hnsw" },
+          { icon: "🤖", title: "LLM Fine-tuning", desc: "GRPO on synthetic coding QA to reward correct Top‑K selection and system preference; distill to 4B GGUF for CPU fallback.", ref: "Domain adaptation", id: "future-rl" },
+          { icon: "📝", title: "Rich Descriptions", desc: "Offline LLM summaries per code (1–2 sentences) embedded once to boost description+STY signals with provenance for audit.", ref: "~60K calls (top codes)", id: "future-desc" },
+          { icon: "🔍", title: "BM25 Integration", desc: "Add lightweight BM25 for rare tokens/numbers and merge with dense candidates using learned weights.", ref: "Hybrid dense+sparse", id: "future-bm25" },
+          { icon: "🌳", title: "Hierarchical Clustering", desc: "Route queries to STY-based buckets and sub-clusters (KMeans/Annoy) to cut candidate counts and latency.", ref: "Reduced search space", id: "future-cluster" },
+          { icon: "💾", title: "Response Caching", desc: "Cache expansions, FAISS hits, and Top‑K by normalized key; version by model/index build id for safe invalidation.", ref: "Up to 10× speedup", id: "future-cache" },
+          { icon: "🧠", title: "UMLS Integration", desc: "Use CUIs and MRSTY to unify synonyms across vocabularies, improve crosswalks, and reduce duplicates.", ref: "Cross‑vocab linking", id: "future-umls" },
         ].map((f, i) => (
           <div key={i} className="bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-black transition-all">
             <div className="flex items-start gap-4">

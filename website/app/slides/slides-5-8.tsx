@@ -42,12 +42,11 @@ export function Slide5({ onDetail }: { onDetail: (id: string) => void }) {
       </div>
 
       <div className="mt-8 bg-white p-6 rounded-xl border-2 border-gray-200">
-        <h3 className="text-2xl font-bold mb-4">Four Methods Summary</h3>
+        <h3 className="text-2xl font-bold mb-4">Fuzzy Matching</h3>
         <ul className="text-lg text-gray-700 space-y-2">
-          <li>• Dense Retrieval: semantic nearest neighbors over RxNorm/SNOMED using a compact 384-d embedding model.</li>
-          <li>• Fuzzy Matching: two-stage RapidFuzz (ratio prefilter -&gt; token_set_ratio refine) to re-rank a large pool.</li>
-          <li>• LLM Intelligence: expand short/ambiguous inputs into keywords + description + STY; optional final rerank.</li>
-          <li>• Multi-Signal Scoring: blend description, keywords, direct, and STY into one robust composite score.</li>
+          <li>• Two-stage RapidFuzz: ratio prefilter then token_set_ratio on reduced candidates.</li>
+          <li>• Anchors = {`{query} ∪ keywords`} with MAX across anchors to capture brands/abbreviations.</li>
+          <li>• Highly parallel via workers with vectorized scoring on reduced pool.</li>
         </ul>
         <button onClick={() => onDetail('fuzzy-deep')} className="mt-4 w-full py-3 bg-yellow-600 text-white rounded-lg font-bold hover:bg-yellow-700">Fuzzy Matching Deep Dive →</button>
       </div>
@@ -124,6 +123,16 @@ export function Slide7({ onDetail }: { onDetail: (id: string) => void }) {
           <li>• Strict determinism (audits, baselines)</li>
           <li>• CPU-only environments (llama.cpp disabled)</li>
           <li>• Batch throughput with predictable cost</li>
+        </ul>
+      </div>
+
+      <div className="mt-8 bg-white p-6 rounded-xl border-2 border-gray-200">
+        <h3 className="text-2xl font-bold mb-4">Four Methods Summary</h3>
+        <ul className="text-lg text-gray-700 space-y-2">
+          <li>• Dense Retrieval: semantic nearest neighbors over RxNorm/SNOMED using a compact 384‑d embedding model.</li>
+          <li>• Fuzzy Matching: two-stage RapidFuzz (ratio prefilter → token_set_ratio refine) to re‑rank a large pool.</li>
+          <li>• LLM Intelligence: expand short/ambiguous inputs into keywords + description + STY; optional final rerank.</li>
+          <li>• Multi-Signal Scoring: blend description, keywords, direct, and STY into one robust composite score.</li>
         </ul>
       </div>
 

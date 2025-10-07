@@ -124,20 +124,7 @@ export function Slide14({ onDetail }: { onDetail: (id: string) => void }) {
         </div>
       </div>
 
-      <div className="bg-white p-8 rounded-2xl border-4 border-gray-200 mt-8">
-        <h3 className="text-3xl font-bold mb-6">CLI Arguments (Detailed)</h3>
-        <div className="grid grid-cols-3 gap-4 text-gray-700">
-          <div><div className="font-bold">--blas_threads</div><div>BLAS threads (OpenBLAS/MKL/BLIS)</div></div>
-          <div><div className="font-bold">--faiss_threads</div><div>OpenMP threads for FAISS</div></div>
-          <div><div className="font-bold">--cpu_pool</div><div>Async thread pool size for to_thread</div></div>
-          <div><div className="font-bold">--fuzzy_workers</div><div>RapidFuzz cdist workers (-1 = all cores)</div></div>
-          <div><div className="font-bold">--llm_concurrency</div><div>Concurrent LLM requests</div></div>
-          <div><div className="font-bold">--llm_tp</div><div>vLLM tensor parallel size</div></div>
-          <div><div className="font-bold">--llm_n_threads</div><div>Threads per llama-cpp context</div></div>
-          <div><div className="font-bold">--vllm_quantization</div><div>Quantization mode (e.g., mxfp4, awq)</div></div>
-          <div><div className="font-bold">--hnsw_efs</div><div>HNSW efSearch (query breadth)</div></div>
-        </div>
-      </div>
+      {/* Detailed CLI arguments intentionally reside on Concurrency slide (Slide 13). */}
 
       <button onClick={() => onDetail('memory')} className="mt-6 w-full py-4 bg-red-600 text-white text-xl font-bold rounded-xl hover:bg-red-700">
         Full Strategy →
@@ -169,7 +156,8 @@ export function Slide15({ onDetail }: { onDetail: (id: string) => void }) {
         <h3 className="text-3xl font-bold mb-6">System Preference (Rules)</h3>
         <div className="bg-blue-50 p-6 rounded-xl text-lg">
           Default preference by entity type (RxNorm for meds; SNOMED CT otherwise) with smart switching:<br/>
-          <span className="font-mono">switch</span> if alternative beats default by <span className="font-mono">--alt_margin</span> and meets <span className="font-mono">--min_score</span>.
+          <span className="font-mono">switch</span> if alternative beats default by <span className="font-mono">--alt_margin</span> and meets <span className="font-mono">--min_score</span>.<br/>
+          When LLM rerank is enabled, the prompt encodes these preferences so the model selects the preferred system unless evidence strongly favors the alternative.
         </div>
       </div>
 
@@ -232,11 +220,6 @@ export function Slide16() {
           <div><div className="text-5xl font-bold">Both</div><div className="text-gray-400">Systems</div></div>
           <div><div className="text-5xl font-bold">Real</div><div className="text-gray-400">Data</div></div>
         </div>
-      </div>
-
-      <div className="mt-6 bg-blue-50 p-6 rounded-2xl border-2 border-blue-300">
-        <h3 className="text-2xl font-bold mb-2">System Preference & LLM Rerank</h3>
-        <div className="text-gray-700">When LLM rerank is enabled, the prompt steers selection toward the default system (RxNorm for meds; SNOMED otherwise) unless it is a poor match. Otherwise, rule-based switching uses <span className="font-mono">--min_score</span> and <span className="font-mono">--alt_margin</span>.</div>
       </div>
     </div>
   )
